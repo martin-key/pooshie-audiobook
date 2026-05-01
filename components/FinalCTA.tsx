@@ -4,6 +4,7 @@ import { PlayGlyph } from "./icons/PlayGlyph";
 export function FinalCTA() {
   return (
     <section
+      className="final-cta"
       style={{
         position: "relative",
         overflow: "hidden",

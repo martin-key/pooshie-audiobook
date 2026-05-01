@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function HeroPortraitStack() {
   return (
-    <div style={{ position: "relative", maxWidth: 480, margin: "0 0 0 auto" }}>
+    <div className="portrait-stack" style={{ position: "relative", maxWidth: 480, margin: "0 0 0 auto" }}>
       {/* main portrait */}
       <div
         className="stamp-frame"
@@ -24,6 +24,7 @@ export function HeroPortraitStack() {
 
       {/* spinning "Free chapter" stamp */}
       <div
+        className="portrait-stamp"
         style={{
           position: "absolute",
           top: -28,
@@ -78,6 +79,7 @@ export function HeroPortraitStack() {
 
       {/* small floating swing card */}
       <div
+        className="portrait-swing"
         style={{
           position: "absolute",
           bottom: -36,
@@ -106,6 +108,7 @@ export function HeroPortraitStack() {
 
       {/* tiny "13 stories" sticker */}
       <div
+        className="portrait-sticker"
         style={{
           position: "absolute",
           top: 40,

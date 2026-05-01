@@ -5,6 +5,7 @@ export function HeroMiniRibbon() {
     <div className="container" style={{ position: "relative", zIndex: 2, paddingBottom: 0 }}>
       <a
         href="#listen"
+        className="hero-ribbon"
         style={{
           display: "flex",
           alignItems: "center",
@@ -37,8 +38,9 @@ export function HeroMiniRibbon() {
         >
           <PlayGlyph size={14} color="#fff" />
         </span>
-        <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1 }}>
+        <div className="hero-ribbon-text" style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1 }}>
           <span
+            className="hero-ribbon-eyebrow"
             style={{
               fontFamily: "var(--font-ui)",
               fontSize: 10,
@@ -51,18 +53,23 @@ export function HeroMiniRibbon() {
             Free preview
           </span>
           <span
+            className="hero-ribbon-title"
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 700,
               fontSize: 18,
               color: "#1F2A37",
               marginTop: 2,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
             Chapter 1 — <em style={{ fontStyle: "italic", fontWeight: 400 }}>The non-prickly hedgehog</em>
           </span>
         </div>
         <span
+          className="hero-ribbon-wave"
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -88,6 +95,7 @@ export function HeroMiniRibbon() {
           ))}
         </span>
         <span
+          className="hero-ribbon-time"
           style={{
             fontFamily: "var(--font-ui)",
             fontSize: 12,

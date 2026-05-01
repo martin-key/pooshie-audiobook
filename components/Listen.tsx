@@ -355,6 +355,7 @@ export function Listen() {
           >
             {/* LEFT — Player */}
             <div
+              className="listen-player"
               style={{
                 position: "relative",
                 padding: "44px 44px 36px",
@@ -464,6 +465,7 @@ export function Listen() {
               </div>
 
               <div
+                className="listen-controls"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -477,6 +479,7 @@ export function Listen() {
                   onClick={togglePlay}
                   disabled={!ch.free}
                   aria-label={playing ? "Pause" : "Play chapter 1"}
+                  className="listen-play-btn"
                   style={{
                     width: 76,
                     height: 76,
@@ -534,6 +537,7 @@ export function Listen() {
 
             {/* RIGHT — Chapter list */}
             <div
+              className="chapter-panel"
               style={{
                 background: "#fff",
                 padding: "36px 12px 36px 28px",

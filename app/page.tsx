@@ -9,6 +9,7 @@ import { Pricing } from "@/components/Pricing";
 import { FaqSection } from "@/components/FaqSection";
 import { FinalCTA } from "@/components/FinalCTA";
 import { Footer } from "@/components/Footer";
+import { MobileStickyCTA } from "@/components/MobileStickyCTA";
 import {
   buildAudiobookJsonLd,
   buildBreadcrumbJsonLd,
@@ -50,6 +51,7 @@ export default function HomePage() {
         <FinalCTA />
       </main>
       <Footer />
+      <MobileStickyCTA />
     </>
   );
 }

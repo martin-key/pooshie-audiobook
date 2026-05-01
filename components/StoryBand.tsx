@@ -104,7 +104,7 @@ export function StoryBand() {
         </Reveal>
 
         <div
-          className="grid-3"
+          className="grid-3 story-pillars"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",

@@ -167,7 +167,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={300}>
-            <div style={{ display: "flex", gap: 14, marginTop: 36, flexWrap: "wrap" }}>
+            <div className="hero-cta-row" style={{ display: "flex", gap: 14, marginTop: 36, flexWrap: "wrap" }}>
               <a href="#listen" className="btn btn-pink btn-lg" style={{ position: "relative" }}>
                 <span
                   style={{
@@ -189,6 +189,7 @@ export function Hero() {
 
           <Reveal delay={400}>
             <div
+              className="hero-stats"
               style={{
                 display: "flex",
                 gap: 36,

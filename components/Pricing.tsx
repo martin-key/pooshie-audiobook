@@ -149,6 +149,7 @@ export function Pricing() {
               >
                 {t.featured && (
                   <div
+                    className="featured-badge"
                     style={{
                       position: "absolute",
                       top: -14,
@@ -189,6 +190,7 @@ export function Pricing() {
 
                 <div>
                   <div
+                    className="price-amount"
                     style={{
                       fontFamily: "var(--font-display)",
                       fontWeight: 700,
