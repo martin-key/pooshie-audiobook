@@ -1,49 +1,432 @@
+/* =====================================================================
+   Pooshie Design System — globals
+   Ported from the design handoff (colors_and_type.css + styles.css).
+   Fonts come from next/font (see app/layout.tsx) — no @import here.
+   ===================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ---------- Color: Brand ---------- */
+  --pooshie-pink:        #E0195B;
+  --pooshie-pink-dark:   #B7124A;
+  --pooshie-pink-soft:   #F8C8D6;
+  --pooshie-pink-blush:  #FCE4EC;
+
+  --pooshie-teal:        #21A1C4;
+  --pooshie-teal-dark:   #1A82A0;
+  --pooshie-teal-soft:   #CFECF4;
+
+  --pooshie-cream:       #FFF8EE;
+  --pooshie-paper:       #FFFFFF;
+  --pooshie-ink:         #1F2A37;
+  --pooshie-ink-2:       #4B5563;
+  --pooshie-line:        #E1E1E1;
+
+  --pooshie-green:       #6BBE4F;
+  --pooshie-yellow:      #FBC85A;
+
+  /* ---------- Color: Semantic ---------- */
+  --bg:           var(--pooshie-cream);
+  --surface:      var(--pooshie-paper);
+  --fg:           var(--pooshie-ink);
+  --fg-muted:     var(--pooshie-ink-2);
+  --border:       var(--pooshie-line);
+  --accent:       var(--pooshie-pink);
+  --accent-2:     var(--pooshie-teal);
+
+  /* ---------- Type: Families (variables come from next/font) ---------- */
+  /* --font-display and --font-ui are injected by app/layout.tsx */
+  --font-body: var(--font-display);
+
+  /* ---------- Type: Scale ---------- */
+  --fs-h1:   72px;     --lh-h1: 1.05;  --tr-h1: -0.01em;
+  --fs-h2:   48px;     --lh-h2: 1.10;  --tr-h2: -0.005em;
+  --fs-h3:   32px;     --lh-h3: 1.20;
+  --fs-h4:   24px;     --lh-h4: 1.30;
+  --fs-body-lg: 22px;  --lh-body-lg: 1.55;
+  --fs-body:    18px;  --lh-body:    1.6;
+  --fs-ui:      15px;  --lh-ui:      1.4;
+  --fs-caption: 13px;  --lh-caption: 1.4;
+
+  /* ---------- Spacing ---------- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+  --sp-9: 96px; --sp-10: 128px;
+
+  /* ---------- Radii ---------- */
+  --r-sm: 12px;
+  --r-md: 24px;
+  --r-lg: 30px;
+  --r-xl: 50px;
+  --r-pill: 9999px;
+
+  /* ---------- Shadows ---------- */
+  --shadow-soft: 0 6px 24px rgba(31, 42, 55, 0.06);
+  --shadow-card: 0 12px 40px rgba(224, 25, 91, 0.08);
+
+  /* ---------- Motion ---------- */
+  --ease-soft: cubic-bezier(.22, .61, .36, 1);
+  --dur-fast: 160ms;
+  --dur-mid:  280ms;
+  --dur-slow: 480ms;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-html {
-  height: 100%;
-}
-
-html,
 body {
-  max-width: 100vw;
+  font-family: var(--font-ui);
+  background: var(--pooshie-cream);
+  color: var(--pooshie-ink);
+  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+img, svg, video { display: block; max-width: 100%; }
+button { font-family: inherit; }
+a { color: inherit; }
+
+/* Visible focus rings for keyboard a11y */
+:focus-visible {
+  outline: 2px solid var(--pooshie-pink);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: var(--pooshie-teal-soft); }
+::-webkit-scrollbar-thumb {
+  background: var(--pooshie-pink);
+  border-radius: 999px;
+  border: 3px solid var(--pooshie-teal-soft);
+}
+::selection { background: var(--pooshie-pink-soft); color: var(--pooshie-ink); }
+
+/* ─────────────────────────────────────────────────
+   Animations
+   ───────────────────────────────────────────────── */
+@keyframes drift {
+  0%   { transform: translate(0, 0)     rotate(0deg); }
+  50%  { transform: translate(20px, -30px) rotate(8deg); }
+  100% { transform: translate(0, 0)     rotate(0deg); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(224,25,91,.45); }
+  100% { box-shadow: 0 0 0 28px rgba(224,25,91,0); }
+}
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes wave-bounce {
+  0%, 100% { transform: scaleY(0.35); }
+  50%      { transform: scaleY(1); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-a {
-  color: inherit;
+/* ─────────────────────────────────────────────────
+   Reveal on scroll (paired with components/Reveal.tsx)
+   ───────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 900ms var(--ease-soft), transform 900ms var(--ease-soft);
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────
+   Editorial display type
+   ───────────────────────────────────────────────── */
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  color: var(--pooshie-ink);
+  text-wrap: balance;
+}
+.display em {
+  font-style: italic;
+  color: var(--pooshie-pink);
+  text-transform: none;
+  font-weight: 400;
+}
+.eyebrow {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pooshie-pink);
+}
+.body-prose {
+  font-family: var(--font-body);
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--pooshie-ink);
+  text-wrap: pretty;
+}
+.body-prose-muted {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--pooshie-ink-2);
+  text-wrap: pretty;
+}
+
+/* ─────────────────────────────────────────────────
+   Buttons
+   ───────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 30px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
   text-decoration: none;
+  transition: background 180ms var(--ease-soft),
+              color 180ms var(--ease-soft),
+              transform 120ms var(--ease-soft),
+              box-shadow 200ms var(--ease-soft);
+  white-space: nowrap;
+}
+.btn-pink {
+  background: var(--pooshie-pink);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(224,25,91,0.22);
+}
+.btn-pink:hover { background: var(--pooshie-pink-dark); transform: translateY(-1px); box-shadow: 0 16px 32px rgba(224,25,91,0.28); }
+.btn-pink:active { transform: scale(0.98); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--pooshie-ink);
+  box-shadow: inset 0 0 0 1.5px var(--pooshie-ink);
+}
+.btn-ghost:hover { background: var(--pooshie-ink); color: #fff; }
+.btn-ghost:active { transform: scale(0.98); }
+
+.btn-teal {
+  background: var(--pooshie-teal);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(33,161,196,0.22);
+}
+.btn-teal:hover { background: var(--pooshie-pink); }
+
+.btn-sm { padding: 11px 22px; font-size: 11px; letter-spacing: 0.18em; }
+.btn-lg { padding: 19px 36px; font-size: 14px; }
+.btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+/* ─────────────────────────────────────────────────
+   Watercolor "stamp" frame (used for portraits)
+   ───────────────────────────────────────────────── */
+.stamp-frame {
+  position: relative;
+  background: #fff;
+  border-radius: 50px;
+  padding: 14px;
+  box-shadow:
+    0 30px 60px -20px rgba(224,25,91,0.18),
+    0 6px 18px rgba(31,42,55,0.05);
+  overflow: hidden;
+}
+.stamp-frame::after {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  border-radius: 50px;
+  box-shadow: inset 0 0 0 1px rgba(224,25,91,0.06);
+}
+.stamp-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 38px;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* ─────────────────────────────────────────────────
+   Marquee
+   ───────────────────────────────────────────────── */
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+  gap: 48px;
+}
+
+/* ─────────────────────────────────────────────────
+   Section / container
+   ───────────────────────────────────────────────── */
+section { position: relative; }
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+/* ─────────────────────────────────────────────────
+   Friends — pure CSS hover/focus state (no JS)
+   ───────────────────────────────────────────────── */
+.friend-card {
+  position: relative;
+  outline: none;
+  transition: transform .4s var(--ease-soft);
+}
+.friend-card:hover,
+.friend-card:focus-within {
+  transform: translateY(-8px);
+}
+.friend-card .friend-portrait {
+  transition: box-shadow .3s var(--ease-soft);
+}
+.friend-card:hover .friend-portrait,
+.friend-card:focus-within .friend-portrait {
+  box-shadow: 0 30px 60px -20px rgba(224,25,91,0.28), 0 6px 14px rgba(31,42,55,0.05);
+}
+.friend-card .friend-img {
+  transition: transform .8s var(--ease-soft);
+}
+.friend-card:hover .friend-img,
+.friend-card:focus-within .friend-img {
+  transform: scale(1.06);
+}
+.friend-card .friend-quote {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .4s, transform .4s;
+}
+.friend-card:hover .friend-quote,
+.friend-card:focus-within .friend-quote {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────
+   Pricing — pure CSS hover state
+   ───────────────────────────────────────────────── */
+.price-card {
+  transition: transform .25s var(--ease-soft), box-shadow .25s;
+}
+.price-card:hover {
+  transform: translateY(-4px);
+}
+.price-card.is-default:hover {
+  box-shadow: 0 20px 50px -22px rgba(31,42,55,.18);
+}
+
+/* ─────────────────────────────────────────────────
+   Header nav — pure CSS hover state
+   ───────────────────────────────────────────────── */
+.nav-link {
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--pooshie-ink);
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  transition: background .15s, color .15s;
+}
+.nav-link:hover {
+  background: var(--pooshie-pink-blush);
+  color: var(--pooshie-pink);
+}
+
+/* ─────────────────────────────────────────────────
+   FAQ — details/summary styling
+   ───────────────────────────────────────────────── */
+.faq-item {
+  border-bottom: 1px solid #f0e3cd;
+  padding: 22px 0;
+}
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--pooshie-ink);
+  letter-spacing: -0.005em;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "+";
+  font-family: var(--font-ui);
+  font-weight: 400;
+  font-size: 28px;
+  color: var(--pooshie-pink);
+  transition: transform .25s var(--ease-soft);
+  line-height: 1;
+}
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-item p {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--pooshie-ink-2);
+  margin-top: 14px;
+  text-wrap: pretty;
+}
+
+/* ─────────────────────────────────────────────────
+   Player — chapter list scrollbar (firefox + webkit)
+   ───────────────────────────────────────────────── */
+.chapter-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pooshie-pink-soft) transparent;
+}
+.chapter-scroll::-webkit-scrollbar { width: 6px; }
+.chapter-scroll::-webkit-scrollbar-track { background: transparent; border: 0; }
+.chapter-scroll::-webkit-scrollbar-thumb { background: var(--pooshie-pink-soft); border: 0; }
+
+/* ─────────────────────────────────────────────────
+   Responsive — single mobile breakpoint at 880px
+   ───────────────────────────────────────────────── */
+@media (max-width: 880px) {
+  .container { padding: 0 22px; }
+  .grid-2 { grid-template-columns: 1fr !important; }
+  .grid-3 { grid-template-columns: 1fr !important; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .hero-grid { grid-template-columns: 1fr !important; gap: 48px !important; padding: 30px 0 80px !important; }
+  .listen-grid { grid-template-columns: 1fr !important; }
+  .header-nav { display: none !important; }
+  .header-cta { margin-left: auto !important; }
+}
+@media (max-width: 540px) {
+  .grid-4 { grid-template-columns: 1fr !important; }
+}
+
+/* ─────────────────────────────────────────────────
+   prefers-reduced-motion: gentle, no animations
+   ───────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
+  .reveal { opacity: 1 !important; transform: none !important; }
 }

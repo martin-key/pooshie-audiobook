@@ -1,66 +1,55 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import type { Metadata } from "next";
+import { Header } from "@/components/Header";
+import { Hero } from "@/components/Hero";
+import { StoryBand } from "@/components/StoryBand";
+import { Listen } from "@/components/Listen";
+import { Friends } from "@/components/Friends";
+import { Reviews } from "@/components/Reviews";
+import { Pricing } from "@/components/Pricing";
+import { FaqSection } from "@/components/FaqSection";
+import { FinalCTA } from "@/components/FinalCTA";
+import { Footer } from "@/components/Footer";
+import {
+  buildAudiobookJsonLd,
+  buildBreadcrumbJsonLd,
+  buildFaqJsonLd,
+} from "@/lib/seo";
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: "Pooshie · A bedtime audiobook for young & grown-up children",
+  description:
+    "Pooshie is a 13-chapter children's audiobook (2h 14m) for ages 4–8. Real human narration, gentle stories about a little pink hedgehog whose spines don't prick. Free chapter 1 — no signup, no email required.",
+  alternates: { canonical: "/" },
+};
+
+export default function HomePage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildAudiobookJsonLd()) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd()) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd()) }}
+      />
+
+      <Header />
+      <main>
+        <Hero />
+        <StoryBand />
+        <Listen />
+        <Friends />
+        <Reviews />
+        <Pricing />
+        <FaqSection />
+        <FinalCTA />
       </main>
-    </div>
+      <Footer />
+    </>
   );
 }

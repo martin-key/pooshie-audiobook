@@ -1,0 +1,12 @@
+{
+  "name": "Pooshie · A Bedtime Audiobook",
+  "short_name": "Pooshie",
+  "description": "A 13-chapter bedtime audiobook for ages 4–8. Gentle stories about a little pink hedgehog whose spines don't prick.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8EE",
+  "theme_color": "#E0195B",
+  "icons": [
+    { "src": "/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
