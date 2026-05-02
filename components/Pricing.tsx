@@ -129,7 +129,11 @@ export function Pricing() {
           }}
         >
           {PRICING.map((t, i) => (
-            <Reveal key={t.name} delay={i * 110}>
+            <Reveal
+              key={t.name}
+              delay={i * 110}
+              className={t.featured ? "price-tile-wrap is-featured-wrap" : "price-tile-wrap"}
+            >
               <div
                 className={`price-card ${t.featured ? "is-featured" : "is-default"}`}
                 style={{

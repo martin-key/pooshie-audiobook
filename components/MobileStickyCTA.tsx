@@ -75,16 +75,32 @@ export function MobileStickyCTA() {
       <a
         href="#listen"
         className="btn btn-pink"
-        style={{ flex: 1, justifyContent: "center", padding: "14px 18px", fontSize: 12 }}
+        style={{
+          flex: 1.4,
+          justifyContent: "center",
+          padding: "14px 18px",
+          fontSize: 12,
+          letterSpacing: "0.18em",
+          boxShadow: "0 12px 28px rgba(224,25,91,.34)",
+        }}
       >
         <PlayGlyph size={11} color="#fff" /> Listen free
       </a>
       <a
         href="#get"
-        className="btn btn-ghost"
-        style={{ flex: 1, justifyContent: "center", padding: "14px 18px", fontSize: 12 }}
+        className="btn"
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          padding: "14px 14px",
+          fontSize: 12,
+          letterSpacing: "0.16em",
+          background: "var(--pooshie-ink)",
+          color: "#fff",
+          boxShadow: "0 10px 22px rgba(31,42,55,.22)",
+        }}
       >
-        Get it · $9.99
+        $9.99
       </a>
     </div>
   );

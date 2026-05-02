@@ -451,103 +451,271 @@ section { position: relative; }
 .menu-drawer .menu-link em { font-style: italic; color: var(--pooshie-pink); font-weight: 400; }
 
 /* ─────────────────────────────────────────────────
-   Responsive — mobile-first refinements
+   Responsive — mobile-first refinements (outstanding-grade)
    ───────────────────────────────────────────────── */
 
-/* Tablet & below */
+/* Tablet & below — ease into mobile */
 @media (max-width: 1024px) {
   .container { padding: 0 28px; }
   .listen-player { padding: 32px 28px 28px !important; }
   .friend-quote { opacity: 1 !important; transform: none !important; }
 }
 
-/* Mobile (phone landscape & below) */
+/* ─── Mobile (≤880px) — the primary mobile experience ─── */
 @media (max-width: 880px) {
   .container { padding: 0 20px; }
   .grid-2 { grid-template-columns: 1fr !important; }
   .grid-3 { grid-template-columns: 1fr !important; gap: 16px !important; }
-  .grid-4 { grid-template-columns: repeat(2, 1fr) !important; gap: 18px !important; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
 
-  /* Header */
+  /* Add bottom space so sticky CTA never covers final content */
+  body { padding-bottom: 88px; }
+
+  /* ── Header — hamburger only; sticky bottom CTA replaces top CTA ── */
   .header-nav { display: none !important; }
   .menu-toggle { display: inline-flex; }
-  .header-cta { padding: 10px 18px !important; font-size: 10px !important; }
+  .header-cta { display: none !important; }
+  header > .container { padding: 12px 20px !important; }
 
-  /* Hero */
-  .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; padding: 24px 0 60px !important; }
-  .hero-grid h1 { font-size: clamp(44px, 11vw, 72px) !important; line-height: 0.98 !important; }
-  .hero-stats { gap: 18px !important; }
+  /* ── Hero ── */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 44px !important;
+    padding: 16px 0 56px !important;
+    text-align: left;
+  }
+  .hero-grid h1 {
+    font-size: clamp(48px, 13vw, 78px) !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.02em !important;
+  }
+  .hero-grid .body-prose {
+    font-size: 18px !important;
+    line-height: 1.55 !important;
+    margin-top: 22px !important;
+  }
+  .hero-cta-row {
+    gap: 10px !important;
+    margin-top: 28px !important;
+    flex-direction: column !important;
+  }
+  .hero-cta-row .btn { width: 100%; justify-content: center !important; }
+  .hero-stats {
+    gap: 0 !important;
+    margin-top: 40px !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    border-top: 1px solid rgba(229,216,194,0.7);
+    border-bottom: 1px solid rgba(229,216,194,0.7);
+    padding: 18px 0 !important;
+  }
   .hero-stats > span[aria-hidden] { display: none; }
+  .hero-stats > div { text-align: left; padding-right: 8px; }
 
-  /* Portrait stack — scale + recenter so absolute decorations don't overflow */
-  .portrait-stack { max-width: 320px !important; margin: 0 auto !important; }
-  .portrait-stack .portrait-stamp { width: 110px !important; height: 110px !important; top: -18px !important; right: -10px !important; }
-  .portrait-stack .portrait-swing { width: 130px !important; bottom: -24px !important; left: -16px !important; }
-  .portrait-stack .portrait-sticker { left: -24px !important; top: 24px !important; padding: 8px 14px !important; font-size: 10px !important; }
+  /* Portrait stack — recenter, scale, keep decorations inside the screen */
+  .portrait-stack {
+    max-width: 260px !important;
+    margin: 0 auto !important;
+  }
+  .portrait-stack .portrait-stamp {
+    width: 84px !important; height: 84px !important;
+    top: -10px !important; right: 6px !important;
+  }
+  .portrait-stack .portrait-stamp svg text { font-size: 8px !important; }
+  .portrait-stack .portrait-stamp > span { font-size: 18px !important; }
+  .portrait-stack .portrait-swing {
+    width: 108px !important;
+    bottom: -18px !important; left: -10px !important;
+    border-radius: 22px !important; padding: 6px !important;
+  }
+  .portrait-stack .portrait-sticker {
+    left: -8px !important; top: 14px !important;
+    padding: 7px 12px !important; font-size: 9px !important;
+    transform: rotate(-10deg) !important;
+  }
 
-  /* Hero mini-ribbon — compact on mobile */
-  .hero-ribbon { padding: 12px 16px !important; gap: 12px !important; }
+  /* Hero mini-ribbon — compact, 1-line, big play disc */
+  .hero-ribbon {
+    padding: 10px 12px 10px 10px !important;
+    gap: 12px !important;
+    margin: 0 !important;
+  }
   .hero-ribbon-wave, .hero-ribbon-time { display: none !important; }
-  .hero-ribbon-title { font-size: 15px !important; }
+  .hero-ribbon-title { font-size: 14px !important; line-height: 1.2 !important; }
   .hero-ribbon-eyebrow { font-size: 9px !important; }
+  .hero-ribbon > span:first-child {
+    width: 40px !important; height: 40px !important;
+  }
 
-  /* Listen */
-  .listen-grid { grid-template-columns: 1fr !important; border-radius: 28px !important; }
-  .listen-player { padding: 28px 22px 24px !important; gap: 22px !important; }
-  .listen-player h3 { font-size: 24px !important; }
-  .listen-controls { gap: 14px !important; }
-  .listen-play-btn { width: 64px !important; height: 64px !important; }
-  .chapter-panel { padding: 24px 4px 24px 20px !important; max-height: 460px !important; }
-  .chapter-panel h4 { font-size: 17px !important; }
+  /* ── Story band ── */
+  #story { padding: 64px 0 48px !important; }
+  #story p { font-size: clamp(22px, 5.5vw, 30px) !important; line-height: 1.3 !important; }
+  .story-pillars { margin-top: 36px !important; }
+  .story-pillars > * > div { padding: 24px !important; border-radius: 22px !important; }
 
-  /* Reviews + Pricing — stack with breathing room */
-  .price-card { padding: 28px 24px 28px !important; }
-  .price-card.is-featured { margin-top: 16px; }
-  .price-card .price-amount { font-size: 44px !important; }
+  /* ── Listen — promote artwork, big play, full-width form ── */
+  #listen { padding: 80px 0 96px !important; }
+  #listen h2 { font-size: clamp(40px, 10vw, 60px) !important; line-height: 1 !important; }
+  .listen-grid {
+    grid-template-columns: 1fr !important;
+    border-radius: 28px !important;
+  }
+  .listen-player {
+    padding: 22px 18px 26px !important;
+    gap: 20px !important;
+  }
+  .listen-player .stamp-frame {
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 22px !important;
+    padding: 6px !important;
+  }
+  .listen-player .stamp-frame img { border-radius: 18px !important; }
+  .listen-player h3 { font-size: 24px !important; line-height: 1.05 !important; }
+  .listen-player p { font-size: 15px !important; }
 
-  /* Pricing best-value pill — pin closer to top so it doesn't clip */
-  .price-card .featured-badge { top: -12px !important; padding: 6px 14px !important; font-size: 9px !important; }
+  /* "Free preview" green badge — keep inside frame on narrow phones */
+  .listen-player [class*="stamp-frame"] + div {
+    top: -10px !important; right: 4px !important;
+  }
 
-  /* Story band */
-  .story-pillars { margin-top: 48px !important; }
+  .listen-controls { gap: 12px !important; margin-top: 4px; }
+  .listen-play-btn {
+    width: 80px !important; height: 80px !important;
+    box-shadow: 0 18px 40px rgba(224,25,91,.42) !important;
+  }
 
-  /* FAQ */
+  /* Lead form on mobile — full-width white input + full-width button */
+  .listen-player form { gap: 12px !important; }
+  .listen-player form > div:nth-child(2),
+  .listen-player form > div:nth-of-type(1) { flex-direction: column !important; }
+  .listen-player .lead-input {
+    background: #fff !important;
+    border: 1px solid #E8DAC0 !important;
+    box-shadow: 0 4px 14px rgba(31,42,55,.04) !important;
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    padding: 16px 18px !important;
+    font-size: 15px !important;
+  }
+  .listen-player form button[type="submit"] {
+    width: 100% !important;
+    padding: 16px 24px !important;
+  }
+
+  /* Chapter list under the player */
+  .chapter-panel {
+    padding: 24px 8px 24px 20px !important;
+    max-height: 380px !important;
+    border-top: 1px solid rgba(229,216,194,0.6);
+  }
+  .chapter-panel h4 { font-size: 16px !important; }
+  .chapter-panel button { padding: 10px 12px !important; }
+  .chapter-panel button > span:first-child { width: 32px !important; height: 32px !important; font-size: 13px !important; }
+  .chapter-panel button > span:nth-child(2) > span:first-child { font-size: 15px !important; }
+
+  /* ── Friends ── */
+  #friends { padding: 80px 0 64px !important; }
+  #friends h2 { font-size: clamp(40px, 10vw, 64px) !important; }
+  .friend-card { transform: rotate(0deg) !important; }
+  .friend-card .friend-portrait {
+    transform: rotate(0deg) !important;
+    padding: 8px !important;
+    border-radius: 22px !important;
+  }
+  .friend-card .friend-portrait > div { border-radius: 16px !important; }
+  .friend-card h3 { font-size: 20px !important; }
+  .friend-card p { font-size: 13px !important; }
+  .friend-card .friend-quote {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    min-height: 0 !important;
+    margin-top: 8px !important;
+  }
+
+  /* ── Reviews ── */
+  section[aria-labelledby="reviews-heading"] { padding: 24px 0 80px !important; }
+  section[aria-labelledby="reviews-heading"] h2 { font-size: clamp(34px, 8.5vw, 52px) !important; }
+  section[aria-labelledby="reviews-heading"] figure { padding: 24px !important; border-radius: 22px !important; }
+
+  /* ── Pricing ── reorder so the featured tier sits FIRST on mobile ── */
+  #get { padding: 80px 0 96px !important; }
+  #get h2 { font-size: clamp(40px, 10vw, 64px) !important; }
+  #get .grid-3 { gap: 22px !important; }
+  .price-tile-wrap.is-featured-wrap { order: -1; margin-top: 14px; }
+  .price-tile-wrap { width: 100%; }
+  .price-card {
+    padding: 28px 22px 24px !important;
+    border-radius: 24px !important;
+    box-shadow: 0 18px 40px -22px rgba(31,42,55,.18) !important;
+  }
+  .price-card.is-featured {
+    box-shadow: 0 24px 50px -18px rgba(224,25,91,.28) !important;
+  }
+  .price-card .price-amount { font-size: 48px !important; }
+  .price-card .featured-badge {
+    top: -12px !important;
+    padding: 6px 16px !important;
+    font-size: 9px !important;
+    letter-spacing: 0.2em !important;
+  }
+  .price-card a.btn { width: 100%; justify-content: center; padding: 16px 22px !important; font-size: 12px !important; }
+
+  /* ── FAQ ── */
+  #faq { padding: 72px 0 64px !important; }
+  #faq > .container > * > div:last-child {
+    padding: 4px 22px !important;
+    border-radius: 24px !important;
+  }
   .faq-item { padding: 18px 0; }
   .faq-item summary { font-size: 18px; gap: 12px; }
   .faq-item summary::after { font-size: 24px; }
-  .faq-item p { font-size: 15px; }
+  .faq-item p { font-size: 15px; line-height: 1.55; }
 
-  /* Final CTA */
-  .final-cta { padding: 90px 0 90px !important; }
-  .final-cta h2 { font-size: clamp(34px, 9vw, 56px) !important; }
+  /* ── Final CTA ── */
+  .final-cta { padding: 88px 0 88px !important; }
+  .final-cta h2 { font-size: clamp(38px, 11vw, 64px) !important; }
+  .final-cta p { font-size: 17px !important; }
+  .final-cta .btn { width: 100%; }
+  .final-cta > .container > div:last-child > * > div { gap: 10px !important; flex-direction: column !important; }
+  .final-cta > .container > div:last-child > * > div .btn { width: 100% !important; justify-content: center !important; }
 
-  /* Footer */
-  footer { padding: 48px 0 32px !important; }
+  /* ── Footer ── */
+  footer { padding: 48px 0 28px !important; }
+  footer .grid-2 { gap: 32px !important; }
+  footer h3 { font-size: 16px !important; }
+  footer .lead-input { background: rgba(255,255,255,0.06) !important; }
+  footer form > div:nth-child(2) { flex-direction: column !important; }
+  footer form button[type="submit"] { width: 100% !important; padding: 14px 22px !important; }
 
-  /* Section padding compression */
-  section { /* already position relative */ }
-  .section-tight { padding-top: 72px !important; padding-bottom: 72px !important; }
-
-  /* Buttons stretch when stacked */
+  /* Buttons */
   .btn-lg { padding: 16px 28px !important; font-size: 13px !important; }
 }
 
-/* Small phones */
+/* ─── Small phones (≤540px) — final tightening ─── */
 @media (max-width: 540px) {
+  .container { padding: 0 18px; }
+  .grid-4 { grid-template-columns: 1fr !important; gap: 18px !important; }
+
+  .hero-grid h1 { font-size: clamp(44px, 13vw, 64px) !important; }
+  .hero-grid .body-prose { font-size: 17px !important; }
+
+  .listen-player { padding: 18px 14px 22px !important; }
+  .listen-play-btn { width: 72px !important; height: 72px !important; }
+  .chapter-panel { padding: 22px 6px 22px 16px !important; max-height: 360px !important; }
+
+  .price-card { padding: 26px 20px 22px !important; }
+  .price-card .price-amount { font-size: 44px !important; }
+
+  .final-cta h2 { font-size: clamp(34px, 12vw, 56px) !important; }
+}
+
+/* ─── Tiny phones (≤380px) — keep things readable on iPhone SE ─── */
+@media (max-width: 380px) {
   .container { padding: 0 16px; }
-  .grid-4 { grid-template-columns: 1fr !important; }
-  .hero-grid h1 { font-size: clamp(40px, 12vw, 60px) !important; }
-  .hero-stats { gap: 14px !important; flex-direction: row !important; flex-wrap: wrap !important; }
-  .hero-cta-row .btn { flex: 1 1 100% !important; }
-  .hero-ribbon { padding: 10px 14px !important; }
-  .hero-ribbon-text { min-width: 0; }
-  .listen-player { padding: 24px 18px 22px !important; }
-  .listen-controls { gap: 10px !important; }
-  .listen-play-btn { width: 60px !important; height: 60px !important; }
-  .chapter-panel { padding: 20px 4px 20px 16px !important; }
-  .price-card { padding: 26px 22px !important; border-radius: 24px !important; }
+  .hero-grid h1 { font-size: 42px !important; }
+  .listen-play-btn { width: 68px !important; height: 68px !important; }
+  .price-card { padding: 24px 18px 22px !important; }
   .price-card .price-amount { font-size: 40px !important; }
-  .friend-card .friend-portrait { padding: 10px !important; border-radius: 24px !important; }
 }
 
 /* Hide mobile sticky CTA on tablet and up */
