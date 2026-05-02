@@ -170,6 +170,7 @@ export function Hero() {
             <div className="hero-cta-row" style={{ display: "flex", gap: 14, marginTop: 36, flexWrap: "wrap" }}>
               <a href="#listen" className="btn btn-pink btn-lg" style={{ position: "relative" }}>
                 <span
+                  className="hero-cta-pulse"
                   style={{
                     position: "absolute",
                     inset: -2,
