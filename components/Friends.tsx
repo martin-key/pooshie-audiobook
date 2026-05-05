@@ -123,7 +123,7 @@ export function Friends() {
                       aspectRatio: "4 / 5",
                       borderRadius: 24,
                       overflow: "hidden",
-                      background: "#FCE4EC",
+                      background: "#fff",
                       position: "relative",
                     }}
                   >
@@ -133,7 +133,7 @@ export function Friends() {
                       fill
                       sizes="(max-width: 540px) 90vw, (max-width: 880px) 45vw, 280px"
                       className="friend-img"
-                      style={{ objectFit: "cover" }}
+                      style={{ objectFit: "contain" }}
                     />
                   </div>
                   <span

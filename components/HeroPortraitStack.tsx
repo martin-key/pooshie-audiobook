@@ -18,7 +18,7 @@ export function HeroPortraitStack() {
           fill
           priority
           sizes="(max-width: 880px) 90vw, 480px"
-          style={{ objectFit: "cover", borderRadius: 38 }}
+          style={{ objectFit: "contain", borderRadius: 38 }}
         />
       </div>
 
@@ -101,7 +101,7 @@ export function HeroPortraitStack() {
             alt="Pooshie and Kitty on a swing — watercolor"
             fill
             sizes="180px"
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "contain" }}
           />
         </div>
       </div>

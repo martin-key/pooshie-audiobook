@@ -392,7 +392,7 @@ export function Listen() {
                     alt={`Chapter ${ch.n} artwork — ${ch.title}`}
                     fill
                     sizes="(max-width: 880px) 90vw, 600px"
-                    style={{ objectFit: "cover", borderRadius: 22 }}
+                    style={{ objectFit: "contain", borderRadius: 22 }}
                   />
                 </div>
                 {ch.free && (
