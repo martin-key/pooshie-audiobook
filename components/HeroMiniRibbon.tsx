@@ -21,7 +21,7 @@ export function HeroMiniRibbon() {
           maxWidth: 760,
           margin: "0 auto",
         }}
-        aria-label="Play free preview of Chapter 1: The non-prickly hedgehog"
+        aria-label="Play free preview of Chapter 1: The Beginning"
       >
         <span
           style={{
@@ -65,7 +65,7 @@ export function HeroMiniRibbon() {
               textOverflow: "ellipsis",
             }}
           >
-            Chapter 1 — <em style={{ fontStyle: "italic", fontWeight: 400 }}>The non-prickly hedgehog</em>
+            Chapter 1 — <em style={{ fontStyle: "italic", fontWeight: 400 }}>The Beginning</em>
           </span>
         </div>
         <span
