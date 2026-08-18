@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CHAPTERS, fmt, parseDur } from "@/lib/chapters";
-import { CHAPTER_1_AUDIO_SRC } from "@/lib/links";
+import { CHAPTER_1_AUDIO_SRC, PLATFORM_LINKS } from "@/lib/links";
 import { Pill } from "./icons/Pill";
 import { PlayGlyph } from "./icons/PlayGlyph";
 import { SoftCloud } from "./icons/SoftCloud";
@@ -15,14 +15,29 @@ function PlatformBadge({
   sub,
   glyph,
   color,
+  href,
 }: {
   name: string;
   sub: string;
   glyph: string;
   color: string;
+  href?: string;
 }) {
+  // Badges with a live storefront become real links; the rest stay decorative.
+  const Tag = href ? "a" : "span";
+  const linkProps = href
+    ? {
+        href,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        "aria-label": `Listen to Pooshie on ${name} (opens in a new tab)`,
+        className: "platform-badge-link",
+      }
+    : {};
+
   return (
-    <span
+    <Tag
+      {...linkProps}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -32,6 +47,8 @@ function PlatformBadge({
         borderRadius: 999,
         padding: "10px 18px 10px 12px",
         boxShadow: "0 2px 10px rgba(31,42,55,.04)",
+        textDecoration: "none",
+        color: "inherit",
       }}
     >
       <span
@@ -75,7 +92,7 @@ function PlatformBadge({
           {name}
         </span>
       </span>
-    </span>
+    </Tag>
   );
 }
 
@@ -722,7 +739,13 @@ export function Listen() {
               Listen on the platforms you already use
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-              <PlatformBadge name="Audible" sub="Stream" glyph="A" color="#F39C12" />
+              <PlatformBadge
+                name="Audible"
+                sub="Listen now"
+                glyph="A"
+                color="#F39C12"
+                href={PLATFORM_LINKS.audible}
+              />
               <PlatformBadge name="Spotify" sub="Stream" glyph="S" color="#1DB954" />
               <PlatformBadge name="Apple Books" sub="Stream" glyph="" color="#1F2A37" />
               <PlatformBadge name="Google Play" sub="Stream" glyph="G" color="#21A1C4" />

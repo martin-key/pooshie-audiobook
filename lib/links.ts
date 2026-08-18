@@ -2,7 +2,8 @@
 // Replace these placeholders with your actual storefront URLs.
 
 export const PLATFORM_LINKS = {
-  audible: "https://www.audible.com/",
+  audible:
+    "https://www.audible.com/pd/The-Tales-of-Pooshie-and-Kitty-Audiobook/B0HCQWJFYF",
   spotify: "https://open.spotify.com/",
   appleBooks: "https://books.apple.com/",
   googlePlay: "https://play.google.com/store/audiobooks",

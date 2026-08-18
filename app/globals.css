@@ -333,6 +333,18 @@ section { position: relative; }
 }
 
 /* ─────────────────────────────────────────────────
+   Platform badges — only linked ones lift on hover
+   ───────────────────────────────────────────────── */
+.platform-badge-link {
+  transition: transform .2s var(--ease-soft), box-shadow .2s, border-color .2s;
+}
+.platform-badge-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--pooshie-pink) !important;
+  box-shadow: 0 10px 24px -10px rgba(31,42,55,.22) !important;
+}
+
+/* ─────────────────────────────────────────────────
    Header nav — pure CSS hover state
    ───────────────────────────────────────────────── */
 .nav-link {
