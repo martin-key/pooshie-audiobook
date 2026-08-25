@@ -201,7 +201,7 @@ export function Hero() {
             >
               <Stat n="13" label="Bedtime chapters" />
               <span style={{ width: 1, height: 32, background: "#E5D8C2" }} aria-hidden />
-              <Stat n="2h 14m" label="Total runtime" small />
+              <Stat n="1h 24m" label="Total runtime" small />
               <span style={{ width: 1, height: 32, background: "#E5D8C2" }} aria-hidden />
               <Stat n="4–8" label="For ages" small />
             </div>

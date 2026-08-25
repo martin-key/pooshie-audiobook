@@ -8,7 +8,7 @@
 
 A conversion-focused single-page marketing site for the **Pooshie** children's audiobook — 13 gentle bedtime chapters about a little pink hedgehog whose spines don't prick. Built for [audiobook.pooshie.net](https://audiobook.pooshie.net).
 
-The site exists to do two things well: let parents **press play on Chapter 1 with no signup**, and **route them to the right audiobook platform** (Audible / Spotify / Apple Books / Google Play) when they're ready to buy.
+The site exists to do two things well: let parents **press play on Chapter 1 with no signup**, and **route them to the right storefront** (Audible US/UK/CA, Libro.fm, Everand, hoopla, Kobo, laFeltrinelli, IBS.it, Storytel in Bulgarian, Kindle on Amazon) when they're ready to buy.
 
 ## What's in here
 
@@ -18,11 +18,11 @@ The site exists to do two things well: let parents **press play on Chapter 1 wit
 | Story band | Pull-quote from the book + 3 trust pillars (real human voice, bedtime length, kindness) |
 | Listen (the centerpiece) | Real `<audio>` element, scrubbable waveform, Pooshie-portrait playhead that walks the timeline, 13-chapter list, embedded email capture |
 | Friends | Four character cards with hover-revealed quotes (CSS-only, server-rendered) |
-| Reviews | Three 5-star testimonials |
-| Pricing | Three tiers — single ($1.99) / full audiobook ($9.99, featured) / + plush bundle ($34.99) |
-| FAQ | 8 visible Q&As, also emitted as `FAQPage` JSON-LD |
+| Reviews | Four 5-star testimonials, led by a real reader review |
+| Where to find Pooshie | Direct links to every storefront — English audiobook, Bulgarian (Storytel), Kindle ebook. No on-site pricing; the storefronts own that. |
+| FAQ | 6 visible Q&As, also emitted as `FAQPage` JSON-LD |
 | Final CTA | Moonlit dark band that breaks the cream and dramatizes "tonight" |
-| Footer | Newsletter form (n8n webhook), brand line, ISBN, links |
+| Footer | Newsletter form (n8n webhook), brand line, social profiles, storefront links, ISBN |
 
 ## Stack
 
@@ -40,11 +40,11 @@ The site exists to do two things well: let parents **press play on Chapter 1 wit
 The site is engineered for both classic SEO and **Generative Engine Optimization** — i.e. so ChatGPT, Perplexity, Claude, and Google's AI Overviews surface Pooshie when parents ask about gentle bedtime audiobooks.
 
 - **Server-rendered everything** — content is in initial HTML; AI crawlers don't need to execute JS.
-- **5 JSON-LD blocks** — `Organization`, `WebSite`, `Audiobook + Book` (with offers, aggregate rating, 3 reviews, 13 chapters, ISBN, duration `PT2H14M`, age range `4-8`), `FAQPage` (8 entries), `BreadcrumbList`.
+- **5 JSON-LD blocks** — `Organization` (with social `sameAs`), `WebSite`, `Audiobook + Book` (storefront `sameAs`, aggregate rating, 4 reviews, 13 chapters, ISBN, duration `PT1H24M`, age range `4-8`), `FAQPage` (6 entries), `BreadcrumbList`.
 - **Full Metadata API** — title template, description, canonical, Open Graph (1200×630 image with dimensions + alt + type), Twitter card, robots `max-image-preview: large` + `max-snippet: -1`, manifest, icons.
 - **`/sitemap.xml`** — dynamic via `app/sitemap.ts`.
 - **`/robots.txt`** — explicit allow rules for major AI crawlers (`GPTBot`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`, `Applebot-Extended`, `OAI-SearchBot`, `Perplexity-User`, `MistralAI-User`, `CCBot`, `Bytespider`, `Amazonbot`, `DuckAssistBot`).
-- **`/llms.txt`** — markdown summary at the root following the [llms.txt convention](https://llmstxt.org), including key facts, chapter list, pricing, and FAQs for clean LLM ingestion.
+- **`/llms.txt`** — markdown summary at the root following the [llms.txt convention](https://llmstxt.org), including key facts, chapter list, storefront links, and FAQs for clean LLM ingestion.
 - **A11y as ranking signal** — semantic landmarks, 21+ `aria-label`s, 17 `aria-labelledby`s, visible focus rings, full `prefers-reduced-motion` honoring on every animation.
 - **Performance** — fonts via `next/font` (no render-blocking CDN call), priority hero image with `sizes`, explicit `width`/`height` (CLS = 0), only the audio player + lead form ship as client components. The landing page is statically prerendered.
 
@@ -68,13 +68,13 @@ components/
 ├── Listen.tsx              # 'use client' — real <audio>, scrubber, chapter list
 ├── LeadForm.tsx            # 'use client' — email → /api/lead
 ├── Friends.tsx             # CSS-only hover (server)
-├── Reviews.tsx, Pricing.tsx, FaqSection.tsx, FinalCTA.tsx, Footer.tsx
+├── Reviews.tsx, GetTheAudiobook.tsx, FaqSection.tsx, FinalCTA.tsx, Footer.tsx
 ├── Reveal.tsx              # 'use client' — IntersectionObserver wrapper
 └── icons/                  # PlayGlyph, SoftCloud, Squiggle, Pill
 
 lib/
 ├── chapters.ts             # CHAPTERS data, fmt(), parseDur(), ISBN, AUTHOR
-├── links.ts                # PURCHASE_LINKS placeholders
+├── links.ts                # SOCIAL_LINKS + every storefront URL (single source of truth)
 ├── seo.ts                  # JSON-LD builders + REVIEWS + FAQS data
 └── env.ts                  # SITE_URL, N8N_WEBHOOK_URL
 
@@ -126,10 +126,10 @@ npm run dev                       # http://localhost:3000
 
 ## Tests
 
-27 unit tests covering:
+31 unit tests covering:
 
-- **`tests/chapters.test.ts`** — there are exactly 13 chapters, only chapter 1 is free, every chapter has the required shape, chapter numbers are sequential, ISBN/author/runtime constants are correct, `fmt`/`parseDur` round-trip cleanly.
-- **`tests/seo.test.ts`** — every JSON-LD builder produces a valid schema.org shape: Audiobook declares both `Audiobook` and `Book` `@type`s, contains 13 `hasPart` chapters, all 3 offers ($1.99 / $9.99 / $34.99), an `AggregateRating`, one `Review` per source review, ISBN `978-619-91473-0-6`, duration `PT2H14M`, language `en`. FAQ has at least 6 entries, all reviews are 5-star.
+- **`tests/chapters.test.ts`** — there are exactly 13 chapters, only chapter 1 is free, every chapter has the required shape, chapter numbers are sequential, ISBN/author/runtime constants are correct, the chapter durations add up to the advertised 1h 24m, `fmt`/`parseDur` round-trip cleanly.
+- **`tests/seo.test.ts`** — every JSON-LD builder produces a valid schema.org shape: Audiobook declares both `Audiobook` and `Book` `@type`s, contains 13 `hasPart` chapters, no on-site `offers`, every storefront under `sameAs`, an `AggregateRating`, one `Review` per source review, ISBN `978-619-91473-0-6`, duration `PT1H24M`, language `en`. FAQ has at least 6 entries and mentions no prices or plush products, all reviews are 5-star.
 - **`tests/lead-route.test.ts`** — `/api/lead` rejects invalid emails (400), silently accepts honeypot fills (200, no forward), rejects malformed JSON (400), accepts valid emails when the webhook is unset (logs warning), and rate-limits at 5 requests per IP per minute (429 on the 6th).
 
 ## CI
@@ -147,8 +147,7 @@ The design hand-off is fully wired but a few placeholders need real values:
 
 1. **Drop the real `chapter-1.mp3`** into `public/audio/` (replaces a 5-second silent placeholder).
 2. **Set `N8N_WEBHOOK_URL`** in production secrets so submissions actually forward.
-3. **Replace placeholder URLs** in [`lib/links.ts`](lib/links.ts) — `PURCHASE_LINKS.{single,full,bundle}` currently point at platform homepages. Drop in your real Audible / Spotify / Apple Books / Google Play listings.
-4. **(Optional) custom `og-default.jpg`** — currently a center-crop of the portrait. A purpose-designed 1200×630 with the "Free chapter" stamp would lift social CTR.
+3. **(Optional) custom `og-default.jpg`** — currently a center-crop of the portrait. A purpose-designed 1200×630 with the "Free chapter" stamp would lift social CTR.
 
 ## Credits
 

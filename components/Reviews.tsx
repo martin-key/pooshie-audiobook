@@ -24,8 +24,8 @@ export function Reviews() {
           </div>
         </Reveal>
         <div
-          className="grid-3"
-          style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 22 }}
+          className="grid-3 reviews-grid"
+          style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 22 }}
         >
           {REVIEWS.map((r, i) => (
             <Reveal key={r.author} delay={i * 100}>
@@ -50,8 +50,22 @@ export function Reviews() {
                     <span key={j} aria-hidden>★</span>
                   ))}
                 </div>
+                {r.title && (
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontWeight: 700,
+                      fontSize: 19,
+                      lineHeight: 1.25,
+                      color: "#1F2A37",
+                      margin: 0,
+                    }}
+                  >
+                    {r.title}
+                  </h3>
+                )}
                 <blockquote
-                  className="body-prose"
+                  className="body-prose review-quote"
                   style={{
                     fontSize: 17,
                     fontStyle: "italic",

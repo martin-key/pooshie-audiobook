@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s · Pooshie",
   },
   description:
-    "A 13-chapter children's audiobook about a little pink hedgehog whose spines don't prick. Real human narration, 5–8 minute chapters, total 2h 14m. Listen to the first chapter free.",
+    "A 13-chapter children's audiobook about a little pink hedgehog whose spines don't prick. Real human narration, 5–8 minute chapters, total 1h 24m. Listen to the first chapter free.",
   applicationName: "Pooshie",
   keywords: [
     "children's audiobook",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     siteName: "Pooshie",
     title: "Pooshie · A bedtime audiobook for ages 4–8",
     description:
-      "A 13-chapter children's audiobook. Gentle bedtime stories, real human narration, 2h 14m total. Free first chapter — no signup.",
+      "A 13-chapter children's audiobook. Gentle bedtime stories, real human narration, 1h 24m total. Free first chapter — no signup.",
     url: "/",
     locale: "en_US",
     images: [
