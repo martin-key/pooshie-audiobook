@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CHAPTERS, fmt, parseDur } from "@/lib/chapters";
-import { CHAPTER_1_AUDIO_SRC, PLATFORM_LINKS } from "@/lib/links";
+import { CHAPTER_1_AUDIO_SRC, FEATURED_PLATFORMS } from "@/lib/links";
 import { Pill } from "./icons/Pill";
 import { PlayGlyph } from "./icons/PlayGlyph";
 import { SoftCloud } from "./icons/SoftCloud";
@@ -594,7 +594,7 @@ export function Listen() {
                     color: "#7c6c5a",
                   }}
                 >
-                  13 · 2h 14m
+                  13 · 1h 24m
                 </span>
               </div>
 
@@ -716,7 +716,7 @@ export function Listen() {
                   className="btn btn-pink"
                   style={{ width: "100%", justifyContent: "center" }}
                 >
-                  Unlock all 13 chapters
+                  Get the full audiobook
                 </a>
               </div>
             </div>
@@ -739,17 +739,32 @@ export function Listen() {
               Listen on the platforms you already use
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-              <PlatformBadge
-                name="Audible"
-                sub="Listen now"
-                glyph="A"
-                color="#F39C12"
-                href={PLATFORM_LINKS.audible}
-              />
-              <PlatformBadge name="Spotify" sub="Stream" glyph="S" color="#1DB954" />
-              <PlatformBadge name="Apple Books" sub="Stream" glyph="" color="#1F2A37" />
-              <PlatformBadge name="Google Play" sub="Stream" glyph="G" color="#21A1C4" />
+              {FEATURED_PLATFORMS.map((pl) => (
+                <PlatformBadge
+                  key={pl.href}
+                  name={pl.name}
+                  sub={pl.short ?? pl.region}
+                  glyph={pl.glyph}
+                  color={pl.color}
+                  href={pl.href}
+                />
+              ))}
             </div>
+            <a
+              href="#get"
+              style={{
+                display: "inline-block",
+                marginTop: 20,
+                fontFamily: "var(--font-ui)",
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#E0195B",
+                textDecoration: "none",
+                borderBottom: "1px solid rgba(224,25,91,.35)",
+              }}
+            >
+              See every storefront →
+            </a>
           </div>
         </Reveal>
       </div>

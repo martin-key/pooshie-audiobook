@@ -133,7 +133,7 @@ export function FinalCTA() {
                 boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.25)",
               }}
             >
-              Get the audiobook · $9.99
+              Get the audiobook
             </a>
           </div>
         </Reveal>
@@ -148,7 +148,7 @@ export function FinalCTA() {
               marginTop: 32,
             }}
           >
-            Available worldwide · Audible · Spotify · Apple Books
+            Available worldwide · Audible · Libro.fm · Everand · hoopla · Kobo · Storytel
           </p>
         </Reveal>
       </div>

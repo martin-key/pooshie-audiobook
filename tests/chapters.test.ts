@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { CHAPTERS, fmt, parseDur, ISBN, AUTHOR, TOTAL_RUNTIME_ISO } from "@/lib/chapters";
+import { CHAPTERS, fmt, parseDur, ISBN, AUTHOR, TOTAL_RUNTIME_ISO, TOTAL_RUNTIME_LABEL } from "@/lib/chapters";
 
 describe("chapters data", () => {
   it("has exactly 13 chapters", () => {
@@ -22,6 +22,11 @@ describe("chapters data", () => {
     }
   });
 
+  it("chapter durations add up to the advertised total runtime", () => {
+    const seconds = CHAPTERS.reduce((sum, c) => sum + parseDur(c.dur), 0);
+    expect(seconds).toBe(84 * 60); // 1h 24m
+  });
+
   it("chapter numbers are sequential 1..13", () => {
     expect(CHAPTERS.map((c) => c.n)).toEqual(Array.from({ length: 13 }, (_, i) => i + 1));
   });
@@ -29,7 +34,8 @@ describe("chapters data", () => {
   it("declares ISBN, author, and total runtime", () => {
     expect(ISBN).toBe("978-619-91473-0-6");
     expect(AUTHOR).toBe("Mr. Push");
-    expect(TOTAL_RUNTIME_ISO).toBe("PT2H14M");
+    expect(TOTAL_RUNTIME_ISO).toBe("PT1H24M");
+    expect(TOTAL_RUNTIME_LABEL).toBe("1h 24m");
   });
 });
 
@@ -38,7 +44,7 @@ describe("fmt", () => {
     expect(fmt(0)).toBe("0:00");
     expect(fmt(9)).toBe("0:09");
     expect(fmt(60)).toBe("1:00");
-    expect(fmt(432)).toBe("7:12");
+    expect(fmt(408)).toBe("6:48");
   });
 
   it("floors fractional seconds", () => {
@@ -50,8 +56,8 @@ describe("fmt", () => {
 describe("parseDur", () => {
   it("parses mm:ss into total seconds", () => {
     expect(parseDur("0:00")).toBe(0);
-    expect(parseDur("7:12")).toBe(432);
-    expect(parseDur("8:25")).toBe(505);
+    expect(parseDur("6:48")).toBe(408);
+    expect(parseDur("7:48")).toBe(468);
   });
 
   it("round-trips with fmt", () => {

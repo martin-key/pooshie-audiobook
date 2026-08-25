@@ -8,7 +8,7 @@ const links = [
   { label: "The Story", href: "#story" },
   { label: "Free Chapter", href: "#listen" },
   { label: "Friends", href: "#friends" },
-  { label: "Get the Book", href: "#get" },
+  { label: "Where to Listen", href: "#get" },
   { label: "FAQ", href: "#faq" },
 ];
 
@@ -226,7 +226,7 @@ export function Header() {
             textAlign: "center",
           }}
         >
-          13 chapters · 2h 14m · ages 4–8
+          13 chapters · 1h 24m · ages 4–8
         </p>
       </div>
     </>

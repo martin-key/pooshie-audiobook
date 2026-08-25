@@ -100,7 +100,7 @@ export function MobileStickyCTA() {
           boxShadow: "0 10px 22px rgba(31,42,55,.22)",
         }}
       >
-        $9.99
+        Get it
       </a>
     </div>
   );
