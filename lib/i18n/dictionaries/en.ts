@@ -337,6 +337,14 @@ export const en = {
     getIt: "Get it",
   },
 
+  consent: {
+    title: "Cookies, gently",
+    body: "With your OK we use cookies for analytics and marketing (Google) to see how families find Pooshie and how our ads are doing. Nothing like that is stored without your consent, and you can change your mind any time under “Cookie settings” at the bottom of the page.",
+    accept: "Accept all",
+    reject: "Only necessary",
+    settings: "Cookie settings",
+  },
+
   notFound: {
     title: "Page not found",
     eyebrow: "404 · lost in the meadow",

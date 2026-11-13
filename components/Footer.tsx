@@ -2,6 +2,8 @@ import { ISBN } from "@/lib/chapters";
 import { format, localePath, type Dictionary, type Locale } from "@/lib/i18n";
 import { SOCIAL_LINKS, STOREFRONTS } from "@/lib/links";
 import { LeadForm } from "./LeadForm";
+import { ConsentSettingsLink } from "./ConsentBanner";
+import { GTM_ID } from "@/lib/env";
 
 const SOCIALS = [
   {
@@ -226,6 +228,12 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
               {t.privacy}
             </a>
             <span aria-hidden>·</span>
+            {GTM_ID && (
+              <>
+                <ConsentSettingsLink label={dict.consent.settings} />
+                <span aria-hidden>·</span>
+              </>
+            )}
             <a href="/llms.txt" style={{ color: "inherit", textDecoration: "none" }}>
               llms.txt
             </a>
