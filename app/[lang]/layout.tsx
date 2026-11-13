@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Cardo, Inter } from "next/font/google";
-import { SITE_URL } from "@/lib/env";
+import { GoogleTagManager } from "@next/third-parties/google";
+import { GTM_ID, SITE_URL } from "@/lib/env";
 import { getDictionary, hasLocale, LOCALE_META, LOCALES, localePath } from "@/lib/i18n";
 import { buildOrgJsonLd, buildWebsiteJsonLd } from "@/lib/seo";
 import "../globals.css";
@@ -114,6 +115,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildWebsiteJsonLd(lang)) }}
         />
       </head>
+      {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
       <body>{children}</body>
     </html>
   );
