@@ -502,12 +502,67 @@ section { position: relative; }
   text-decoration: none;
   padding: 10px 16px;
   border-radius: 999px;
+  white-space: nowrap;
   transition: background .15s, color .15s;
+}
+/* Longer labels (e.g. German) need tighter links before the header switches to the burger menu */
+@media (max-width: 1100px) {
+  .nav-link { padding: 10px 9px; font-size: 13px; }
+}
+@media (max-width: 960px) {
+  .header-cta { display: none !important; }
 }
 .nav-link:hover {
   background: var(--pooshie-pink-blush);
   color: var(--pooshie-pink);
 }
+
+/* Store card: main button and "coming soon" note (German page) */
+.store-card-primary { align-self: flex-start; justify-content: center; }
+.store-card-soon {
+  margin: 0;
+  padding: 16px 20px;
+  border-radius: 18px;
+  background: var(--pooshie-pink-blush);
+  color: var(--pooshie-pink-dark);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+@media (max-width: 540px) {
+  .store-card-primary { align-self: stretch; }
+}
+
+/* ─────────────────────────────────────────────────
+   Language switcher (EN · DE)
+   ───────────────────────────────────────────────── */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid rgba(31,42,55,0.15);
+  background: rgba(255,255,255,0.6);
+  flex-shrink: 0;
+}
+.lang-switch a {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--pooshie-ink-2);
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 999px;
+  transition: background .15s, color .15s;
+}
+.lang-switch a:hover { background: var(--pooshie-pink-blush); color: var(--pooshie-pink); }
+.lang-switch a[aria-current="true"] { background: var(--pooshie-pink); color: #fff; }
+.lang-switch a:focus-visible { outline: 2px solid var(--pooshie-pink); outline-offset: 2px; }
+.lang-switch-lg a { font-size: 13px; padding: 11px 16px; }
 
 /* ─────────────────────────────────────────────────
    FAQ — details/summary styling

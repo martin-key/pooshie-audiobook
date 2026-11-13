@@ -1,29 +1,29 @@
 import { Pill } from "./icons/Pill";
 import { Reveal } from "./Reveal";
 import { SoftCloud } from "./icons/SoftCloud";
-import { ISBN, TOTAL_RUNTIME_LABEL } from "@/lib/chapters";
-import {
-  AUDIOBOOK_PLATFORMS,
-  BULGARIAN_PLATFORMS,
-  EBOOK_PLATFORMS,
-  type ExternalLink,
-} from "@/lib/links";
+import { Rich } from "./Rich";
+import { ISBN } from "@/lib/chapters";
+import { format, type Dictionary, type Locale } from "@/lib/i18n";
+import { STOREFRONTS, type ExternalLink } from "@/lib/links";
 
-function PlatformTile({ link }: { link: ExternalLink }) {
+type Labels = { tileAria: string; regions: Dictionary["platforms"]["regions"] };
+
+function PlatformTile({ link, labels }: { link: ExternalLink; labels: Labels }) {
+  const region = labels.regions[link.region];
   return (
     <a
       href={link.href}
       target="_blank"
       rel="noopener noreferrer"
       className="platform-tile"
-      aria-label={`${link.name} — ${link.region} (opens in a new tab)`}
+      aria-label={format(labels.tileAria, { name: link.name, region })}
     >
       <span className="platform-tile-dot" style={{ background: link.color }} aria-hidden>
         {link.glyph}
       </span>
       <span style={{ flex: 1, minWidth: 0 }}>
         <span className="platform-tile-name">{link.name}</span>
-        <span className="platform-tile-region">{link.region}</span>
+        <span className="platform-tile-region">{region}</span>
       </span>
       <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden className="platform-tile-arrow">
         <path
@@ -45,8 +45,10 @@ function StoreCard({
   title,
   note,
   links,
+  labels,
   featured,
   twoUp,
+  lead,
   footer,
 }: {
   eyebrow: string;
@@ -54,8 +56,11 @@ function StoreCard({
   title: string;
   note: string;
   links: ExternalLink[];
+  labels: Labels;
   featured?: boolean;
   twoUp?: boolean;
+  /** Shown between the heading and the tiles — the main button, or a "coming soon" note. */
+  lead?: React.ReactNode;
   footer?: React.ReactNode;
 }) {
   return (
@@ -67,17 +72,43 @@ function StoreCard({
         <h3 className="store-card-title">{title}</h3>
         <p className="body-prose-muted store-card-note">{note}</p>
       </div>
-      <div className={twoUp ? "platform-grid is-two-up" : "platform-grid"}>
-        {links.map((l) => (
-          <PlatformTile key={l.href} link={l} />
-        ))}
-      </div>
+      {lead}
+      {links.length > 0 && (
+        <div className={twoUp ? "platform-grid is-two-up" : "platform-grid"}>
+          {links.map((l) => (
+            <PlatformTile key={l.href} link={l} labels={labels} />
+          ))}
+        </div>
+      )}
       {footer}
     </div>
   );
 }
 
-export function GetTheAudiobook() {
+export function GetTheAudiobook({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+  const t = dict.get;
+  const labels: Labels = { tileAria: t.tileAria, regions: dict.platforms.regions };
+  const stores = STOREFRONTS[locale];
+  // One clear call to action: the first audiobook store as a big button, the rest as tiles.
+  const primary = stores.primaryFirst ? stores.audiobook[0] : undefined;
+  const audiobookTiles = primary ? stores.audiobook.slice(1) : stores.audiobook;
+
+  let audiobookLead: React.ReactNode = null;
+  if (primary) {
+    audiobookLead = (
+      <a
+        href={primary.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-pink btn-lg store-card-primary"
+        aria-label={format(t.tileAria, { name: primary.name, region: labels.regions[primary.region] })}
+      >
+        {format(t.primaryCta, { name: primary.name })}
+      </a>
+    );
+  } else if (stores.audiobook.length === 0) {
+    audiobookLead = <p className="store-card-soon">{t.comingSoon}</p>;
+  }
   return (
     <section
       id="get"
@@ -113,17 +144,16 @@ export function GetTheAudiobook() {
               marginInline: "auto",
             }}
           >
-            <Pill>Start tonight</Pill>
+            <Pill>{t.pill}</Pill>
             <h2
               id="get-heading"
               className="display"
               style={{ fontSize: "clamp(40px, 6vw, 72px)", margin: "20px 0 16px" }}
             >
-              Where to find <em>pooshie</em>
+              <Rich text={t.heading} />
             </h2>
             <p className="body-prose-muted" style={{ fontSize: 18 }}>
-              All thirteen chapters — {TOTAL_RUNTIME_LABEL} of warm storytelling — on the
-              listening app you already use. Pick a storefront and press play.
+              {t.intro}
             </p>
           </div>
         </Reveal>
@@ -133,19 +163,24 @@ export function GetTheAudiobook() {
             <StoreCard
               featured
               twoUp
-              eyebrow="The audiobook · English"
+              eyebrow={t.audiobookEyebrow}
               color="#E0195B"
-              title="Listen anywhere"
-              note="Narrated by a real human voice, with original music. Available worldwide."
-              links={AUDIOBOOK_PLATFORMS}
+              title={t.audiobookTitle}
+              note={t.audiobookNote}
+              links={audiobookTiles}
+              labels={labels}
+              lead={audiobookLead}
               footer={
                 <div className="store-card-footer">
                   <p className="body-prose-muted" style={{ fontSize: 15, margin: 0 }}>
-                    Not sure yet? Chapter&nbsp;1 is free to stream right here — no signup, no
-                    card, just the story.
+                    {t.audiobookFooter}
                   </p>
-                  <a href="#listen" className="btn btn-pink" style={{ marginTop: 16 }}>
-                    Listen to chapter 1
+                  <a
+                    href="#listen"
+                    className={primary ? "btn btn-ghost" : "btn btn-pink"}
+                    style={{ marginTop: 16 }}
+                  >
+                    {dict.common.listenChapter1}
                   </a>
                 </div>
               }
@@ -155,20 +190,22 @@ export function GetTheAudiobook() {
           <div className="get-grid-side">
             <Reveal delay={110}>
               <StoreCard
-                eyebrow="Аудиокнигата · на български"
+                eyebrow={t.otherEyebrow}
                 color="#21A1C4"
-                title="Разкази за Пуши и Кити"
-                note="Цялата аудиокнига на български език, в Storytel."
-                links={BULGARIAN_PLATFORMS}
+                title={t.otherTitle}
+                note={t.otherNote}
+                links={stores.otherEditions}
+                labels={labels}
               />
             </Reveal>
             <Reveal delay={200}>
               <StoreCard
-                eyebrow="Prefer to read?"
+                eyebrow={t.ebookEyebrow}
                 color="#6BBE4F"
-                title="The Kindle ebook"
-                note="The same thirteen tales, with the original watercolour illustrations."
-                links={EBOOK_PLATFORMS}
+                title={t.ebookTitle}
+                note={t.ebookNote}
+                links={stores.ebook}
+                labels={labels}
               />
             </Reveal>
           </div>
@@ -184,7 +221,7 @@ export function GetTheAudiobook() {
               color: "#7c6c5a",
             }}
           >
-            Available worldwide · Narrated by a real human, never AI · ISBN {ISBN}
+            {format(t.bottomLine, { isbn: ISBN })}
           </div>
         </Reveal>
       </div>

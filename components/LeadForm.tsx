@@ -1,14 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import type { Locale } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n";
 
 type Props = {
   context: string;
+  locale: Locale;
+  t: Dictionary["leadForm"];
   copy?: string;
   variant?: "light" | "dark";
 };
 
-export function LeadForm({ context, copy, variant = "light" }: Props) {
+export function LeadForm({ context, locale, t, copy, variant = "light" }: Props) {
   const [email, setEmail] = useState("");
   const [hp, setHp] = useState(""); // honeypot
   const [state, setState] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -23,18 +27,27 @@ export function LeadForm({ context, copy, variant = "light" }: Props) {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email, context, hp }),
+        body: JSON.stringify({ email, context, locale, hp }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data?.ok === false) {
         setState("error");
-        setErrMsg(data?.error ?? "Something went wrong. Please try again.");
+        // The API answers in English; show our own copy for the status instead.
+        setErrMsg(
+          res.status === 400
+            ? t.errorInvalid
+            : res.status === 429
+              ? t.errorRateLimit
+              : res.status === 502
+                ? t.errorSave
+                : t.errorGeneric,
+        );
         return;
       }
       setState("success");
     } catch {
       setState("error");
-      setErrMsg("Network error — please try again.");
+      setErrMsg(t.errorNetwork);
     }
   };
 
@@ -61,7 +74,7 @@ export function LeadForm({ context, copy, variant = "light" }: Props) {
           lineHeight: 1.5,
         }}
       >
-        Thank you. We&apos;ll be in touch soon — keep an ear out for Pooshie.
+        {t.success}
       </div>
     );
   }
@@ -70,7 +83,7 @@ export function LeadForm({ context, copy, variant = "light" }: Props) {
     <form
       onSubmit={onSubmit}
       style={{ display: "flex", flexDirection: "column", gap: 10 }}
-      aria-label="Subscribe for Pooshie updates"
+      aria-label={t.formAria}
     >
       {copy && (
         <p
@@ -96,10 +109,10 @@ export function LeadForm({ context, copy, variant = "light" }: Props) {
           required
           inputMode="email"
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder={t.placeholder}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          aria-label="Email address"
+          aria-label={t.emailAria}
           className="lead-input"
           style={{
             flex: "1 1 220px",
@@ -138,7 +151,7 @@ export function LeadForm({ context, copy, variant = "light" }: Props) {
           className="btn btn-pink"
           style={{ flex: "0 0 auto" }}
         >
-          {state === "submitting" ? "Sending…" : "Send me Pooshie"}
+          {state === "submitting" ? t.sending : t.submit}
         </button>
       </div>
 

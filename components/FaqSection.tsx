@@ -1,8 +1,10 @@
 import { Pill } from "./icons/Pill";
 import { Reveal } from "./Reveal";
-import { FAQS } from "@/lib/seo";
+import { Rich } from "./Rich";
+import type { Dictionary } from "@/lib/i18n";
 
-export function FaqSection() {
+export function FaqSection({ dict }: { dict: Dictionary }) {
+  const t = dict.faq;
   return (
     <section
       id="faq"
@@ -12,16 +14,16 @@ export function FaqSection() {
       <div className="container" style={{ maxWidth: 880 }}>
         <Reveal>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <Pill bg="#CFECF4" color="#0e5366">Questions, gently answered</Pill>
+            <Pill bg="#CFECF4" color="#0e5366">{t.pill}</Pill>
             <h2
               id="faq-heading"
               className="display"
               style={{ fontSize: "clamp(36px, 5vw, 60px)", margin: "20px 0 12px" }}
             >
-              The little things <em>parents ask</em>
+              <Rich text={t.heading} />
             </h2>
             <p className="body-prose-muted" style={{ fontSize: 18, maxWidth: 540, margin: "0 auto" }}>
-              Everything you might want to know before pressing play tonight.
+              {t.intro}
             </p>
           </div>
         </Reveal>
@@ -36,7 +38,7 @@ export function FaqSection() {
               boxShadow: "0 12px 40px -22px rgba(31,42,55,.1)",
             }}
           >
-            {FAQS.map((f) => (
+            {t.items.map((f) => (
               <details key={f.q} className="faq-item">
                 <summary>{f.q}</summary>
                 <p>{f.a}</p>

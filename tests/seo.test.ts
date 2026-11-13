@@ -5,12 +5,14 @@ import {
   buildOrgJsonLd,
   buildBreadcrumbJsonLd,
   buildWebsiteJsonLd,
-  REVIEWS,
-  FAQS,
 } from "@/lib/seo";
+import { getDictionary } from "@/lib/i18n";
+
+const REVIEWS = getDictionary("en").reviews.items;
+const FAQS = getDictionary("en").faq.items;
 
 describe("Organization JSON-LD", () => {
-  const ld = buildOrgJsonLd();
+  const ld = buildOrgJsonLd("en");
   it("has @context and @type", () => {
     expect(ld["@context"]).toBe("https://schema.org");
     expect(ld["@type"]).toBe("Organization");
@@ -21,7 +23,7 @@ describe("Organization JSON-LD", () => {
 });
 
 describe("Audiobook JSON-LD", () => {
-  const ld = buildAudiobookJsonLd() as Record<string, unknown>;
+  const ld = buildAudiobookJsonLd("en") as Record<string, unknown>;
 
   it("declares both Audiobook and Book types", () => {
     expect(ld["@type"]).toEqual(["Audiobook", "Book"]);
@@ -62,7 +64,7 @@ describe("Audiobook JSON-LD", () => {
 });
 
 describe("FAQ JSON-LD", () => {
-  const ld = buildFaqJsonLd() as Record<string, unknown>;
+  const ld = buildFaqJsonLd("en") as Record<string, unknown>;
 
   it("is a FAQPage with one Question per entry", () => {
     expect(ld["@type"]).toBe("FAQPage");
@@ -79,7 +81,7 @@ describe("FAQ JSON-LD", () => {
 
 describe("Breadcrumb JSON-LD", () => {
   it("has a single home crumb", () => {
-    const ld = buildBreadcrumbJsonLd() as Record<string, unknown>;
+    const ld = buildBreadcrumbJsonLd("en") as Record<string, unknown>;
     expect(ld["@type"]).toBe("BreadcrumbList");
     const items = ld.itemListElement as unknown[];
     expect(items).toHaveLength(1);
@@ -88,7 +90,7 @@ describe("Breadcrumb JSON-LD", () => {
 
 describe("WebSite JSON-LD", () => {
   it("declares schema.org WebSite", () => {
-    const ld = buildWebsiteJsonLd();
+    const ld = buildWebsiteJsonLd("en");
     expect(ld["@type"]).toBe("WebSite");
     expect(ld["@context"]).toBe("https://schema.org");
   });
@@ -117,6 +119,48 @@ describe("Reviews + FAQs source data", () => {
     for (const f of FAQS) {
       expect(f.q.length).toBeGreaterThan(0);
       expect(f.a.length).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe("German structured data", () => {
+  it("describes the German edition: Puschi, German language, Melina Camus, German stores", () => {
+    const faq = buildFaqJsonLd("de") as Record<string, unknown>;
+    expect(faq.inLanguage).toBe("de");
+    expect((faq.mainEntity as unknown[]).length).toBe(getDictionary("de").faq.items.length);
+
+    const book = buildAudiobookJsonLd("de") as Record<string, unknown>;
+    expect(book.name).toBe("Erzählungen über Puschi und Kitty");
+    expect(book.inLanguage).toBe("de");
+    expect(book.isbn).toBeUndefined(); // the English ISBN must not leak onto the German edition
+    expect(book.readBy).toEqual({ "@type": "Person", name: "Melina Camus" });
+    expect(book.sameAs).toContain("https://www.amazon.de/dp/B0HRFYL6SK");
+    expect(book.aggregateRating).toBeUndefined(); // page reviews are of the English edition
+    expect(book.review).toBeUndefined();
+    expect(String(book.url)).toMatch(/\/de$/);
+    const parts = book.hasPart as Array<Record<string, unknown>>;
+    expect(parts[0].name).toBe("Der Anfang");
+
+    const site = buildWebsiteJsonLd("de");
+    expect(site.inLanguage).toBe("de");
+    expect(site.name).toBe("Puschi");
+    expect(buildOrgJsonLd("de").name).toBe("Puschi");
+  });
+
+  it("never calls the character Pooshie in German copy (except the English original's title)", () => {
+    const json = JSON.stringify(getDictionary("de")).replaceAll("The Tales of Pooshie and Kitty", "");
+    expect(json).not.toMatch(/Pooshie/);
+  });
+
+  it("keeps the DACH positioning line and search terms on the German page", () => {
+    const de = getDictionary("de");
+    const line = "Gute-Nacht-Geschichten über Freundschaft, Mitgefühl und Mut – für Kinder von 4 bis 8.";
+    expect(de.meta.homeDescription.startsWith(line)).toBe(true);
+    expect(de.hero.introRest).toContain(line);
+    const visible = JSON.stringify(de);
+    for (const term of ["Gute-Nacht-Geschichten", "Einschlafgeschichten", "Hörbuch für Kinder"]) {
+      expect(de.meta.keywords).toContain(term);
+      expect(visible).toContain(term);
     }
   });
 });

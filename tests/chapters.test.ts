@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { CHAPTERS, fmt, parseDur, ISBN, AUTHOR, TOTAL_RUNTIME_ISO, TOTAL_RUNTIME_LABEL } from "@/lib/chapters";
+import { CHAPTER_META, localizeChapters, fmt, parseDur, ISBN, AUTHOR, TOTAL_RUNTIME_ISO } from "@/lib/chapters";
+import { getDictionary } from "@/lib/i18n";
+
+const CHAPTERS = localizeChapters(getDictionary("en").chapters);
 
 describe("chapters data", () => {
   it("has exactly 13 chapters", () => {
@@ -23,7 +26,7 @@ describe("chapters data", () => {
   });
 
   it("chapter durations add up to the advertised total runtime", () => {
-    const seconds = CHAPTERS.reduce((sum, c) => sum + parseDur(c.dur), 0);
+    const seconds = CHAPTER_META.reduce((sum, c) => sum + parseDur(c.dur), 0);
     expect(seconds).toBe(84 * 60); // 1h 24m
   });
 
@@ -35,7 +38,7 @@ describe("chapters data", () => {
     expect(ISBN).toBe("978-619-91473-0-6");
     expect(AUTHOR).toBe("Mr. Push");
     expect(TOTAL_RUNTIME_ISO).toBe("PT1H24M");
-    expect(TOTAL_RUNTIME_LABEL).toBe("1h 24m");
+    expect(getDictionary("en").common.runtime).toBe("1h 24m");
   });
 });
 

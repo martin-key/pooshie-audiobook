@@ -1,6 +1,7 @@
 import Image from "next/image";
+import type { Dictionary } from "@/lib/i18n";
 
-export function HeroPortraitStack() {
+export function HeroPortraitStack({ t }: { t: Dictionary["hero"] }) {
   return (
     <div className="portrait-stack" style={{ position: "relative", maxWidth: 480, margin: "0 0 0 auto" }}>
       {/* main portrait */}
@@ -14,7 +15,7 @@ export function HeroPortraitStack() {
       >
         <Image
           src="/images/pooshie-portrait.jpeg"
-          alt="Pooshie the pink hedgehog — watercolor portrait"
+          alt={t.portraitAlt}
           fill
           priority
           sizes="(max-width: 880px) 90vw, 480px"
@@ -60,7 +61,7 @@ export function HeroPortraitStack() {
             }}
           >
             <textPath href="#circle-path">
-              free chapter · listen now · free chapter ·{" "}
+              {t.stampText}
             </textPath>
           </text>
         </svg>
@@ -98,7 +99,7 @@ export function HeroPortraitStack() {
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: 22, overflow: "hidden" }}>
           <Image
             src="/images/swing.jpg"
-            alt="Pooshie and Kitty on a swing — watercolor"
+            alt={t.swingAlt}
             fill
             sizes="180px"
             style={{ objectFit: "contain" }}
@@ -127,7 +128,7 @@ export function HeroPortraitStack() {
         }}
         aria-hidden
       >
-        13 chapters
+        {t.sticker}
       </div>
     </div>
   );
