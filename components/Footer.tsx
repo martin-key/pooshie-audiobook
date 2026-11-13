@@ -1,5 +1,6 @@
 import { ISBN } from "@/lib/chapters";
-import { AUDIOBOOK_PLATFORMS, BULGARIAN_PLATFORMS, EBOOK_PLATFORMS, SOCIAL_LINKS } from "@/lib/links";
+import { format, localePath, type Dictionary, type Locale } from "@/lib/i18n";
+import { SOCIAL_LINKS, STOREFRONTS } from "@/lib/links";
 import { LeadForm } from "./LeadForm";
 
 const SOCIALS = [
@@ -19,19 +20,6 @@ const SOCIALS = [
     path: "M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z",
   },
 ];
-
-/** A short, curated set of storefront links — the full list lives in the #get section. */
-const FOOTER_LISTEN = [
-  AUDIOBOOK_PLATFORMS[0], // Audible US
-  AUDIOBOOK_PLATFORMS[1], // Audible UK
-  AUDIOBOOK_PLATFORMS[2], // Audible CA
-  AUDIOBOOK_PLATFORMS[3], // Libro.fm
-  AUDIOBOOK_PLATFORMS[4], // Everand
-  AUDIOBOOK_PLATFORMS[5], // hoopla
-  AUDIOBOOK_PLATFORMS[6], // Kobo
-];
-
-const FOOTER_READ = [BULGARIAN_PLATFORMS[0], EBOOK_PLATFORMS[0]];
 
 const linkStyle: React.CSSProperties = {
   color: "rgba(255,255,255,0.7)",
@@ -59,7 +47,12 @@ function ColumnHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Footer() {
+export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+  const t = dict.footer;
+  const regions = dict.platforms.regions;
+  const home = localePath(locale);
+  // A short, curated set of storefront links — the full list lives in the #get section.
+  const { footerListen, footerAlso } = STOREFRONTS[locale];
   return (
     <footer
       style={{
@@ -72,7 +65,7 @@ export function Footer() {
       aria-labelledby="footer-heading"
     >
       <h2 id="footer-heading" style={{ position: "absolute", left: -9999 }}>
-        Footer
+        {t.srHeading}
       </h2>
       <div className="container">
         <div
@@ -94,7 +87,7 @@ export function Footer() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Pooshie
+              {dict.common.brand}
             </span>
             <p
               style={{
@@ -106,8 +99,7 @@ export function Footer() {
                 maxWidth: 380,
               }}
             >
-              A 13-chapter bedtime audiobook for ages 4–8. Gentle stories about
-              a little pink hedgehog whose spines don&apos;t prick.
+              {t.tagline}
             </p>
 
             <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
@@ -117,7 +109,7 @@ export function Footer() {
                   href={sn.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`Pooshie on ${sn.name} (opens in a new tab)`}
+                  aria-label={format(t.socialAria, { name: sn.name })}
                   className="social-dot"
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -138,12 +130,14 @@ export function Footer() {
                 marginBottom: 12,
               }}
             >
-              A bedtime letter, once in a while
+              {t.newsletterHeading}
             </h3>
             <LeadForm
               context="footer"
               variant="dark"
-              copy="One quiet email when a new chapter or bonus story is ready. Never spam."
+              locale={locale}
+              t={dict.leadForm}
+              copy={t.newsletterCopy}
             />
           </div>
         </div>
@@ -160,9 +154,12 @@ export function Footer() {
           }}
         >
           <div>
-            <ColumnHeading>Listen to the audiobook</ColumnHeading>
+            <ColumnHeading>{t.listenHeading}</ColumnHeading>
             <div className="footer-link-cols">
-              {FOOTER_LISTEN.map((pl) => (
+              {footerListen.length === 0 && (
+                <span style={{ ...linkStyle, lineHeight: 1.6, display: "block" }}>{dict.get.comingSoon}</span>
+              )}
+              {footerListen.map((pl) => (
                 <a
                   key={pl.href}
                   href={pl.href}
@@ -172,16 +169,16 @@ export function Footer() {
                   style={linkStyle}
                 >
                   {pl.name}
-                  <span style={{ color: "rgba(255,255,255,0.35)" }}> · {pl.region}</span>
+                  <span style={{ color: "rgba(255,255,255,0.35)" }}> · {regions[pl.region]}</span>
                 </a>
               ))}
             </div>
           </div>
 
           <div>
-            <ColumnHeading>Also available</ColumnHeading>
+            <ColumnHeading>{t.alsoHeading}</ColumnHeading>
             <div className="footer-link-cols">
-              {FOOTER_READ.map((pl) => (
+              {footerAlso.map((pl) => (
                 <a
                   key={pl.href}
                   href={pl.href}
@@ -191,12 +188,12 @@ export function Footer() {
                   style={linkStyle}
                 >
                   {pl.name}
-                  <span style={{ color: "rgba(255,255,255,0.35)" }}> · {pl.region}</span>
+                  <span style={{ color: "rgba(255,255,255,0.35)" }}> · {regions[pl.region]}</span>
                 </a>
               ))}
-              <a href="/#get" className="footer-link" style={linkStyle}>
-                All storefronts
-                <span style={{ color: "rgba(255,255,255,0.35)" }}> · every country</span>
+              <a href={`${home}#get`} className="footer-link" style={linkStyle}>
+                {t.allStorefronts}
+                <span style={{ color: "rgba(255,255,255,0.35)" }}> · {t.everyCountry}</span>
               </a>
             </div>
           </div>
@@ -215,18 +212,18 @@ export function Footer() {
           }}
         >
           <span style={{ color: "rgba(255,255,255,0.55)" }}>
-            © {new Date().getFullYear()} Pooshie &amp; Kitty · audiobook.pooshie.net · ISBN {ISBN}
+            {format(t.copyright, { year: new Date().getFullYear(), isbn: ISBN })}
           </span>
           <nav
-            aria-label="Footer"
+            aria-label={t.navAria}
             style={{ display: "flex", gap: 18, color: "rgba(255,255,255,0.55)" }}
           >
             <a href="mailto:hello@pooshie.net" style={{ color: "inherit", textDecoration: "none" }}>
-              Contact
+              {t.contact}
             </a>
             <span aria-hidden>·</span>
-            <a href="/privacy" style={{ color: "inherit", textDecoration: "none" }}>
-              Privacy
+            <a href={localePath(locale, "/privacy")} style={{ color: "inherit", textDecoration: "none" }}>
+              {t.privacy}
             </a>
             <span aria-hidden>·</span>
             <a href="/llms.txt" style={{ color: "inherit", textDecoration: "none" }}>

@@ -2,43 +2,21 @@ import Image from "next/image";
 import { Pill } from "./icons/Pill";
 import { Reveal } from "./Reveal";
 import { SoftCloud } from "./icons/SoftCloud";
+import { Rich } from "./Rich";
+import type { Dictionary } from "@/lib/i18n";
 
-const FRIENDS = [
-  {
-    name: "Pooshie",
-    role: "The little pink hedgehog",
-    quote: "His spines didn't prick. He had never done anybody any harm.",
-    img: "/images/pooshie-portrait.jpeg",
-    tilt: -2,
-    color: "#E0195B",
-  },
-  {
-    name: "Kitty",
-    role: "A squirrel and good friend",
-    quote: "Somehow this non-prickly pinkish ball gave her such peace of mind…",
-    img: "/images/grass-friends.jpg",
-    tilt: 3,
-    color: "#6BBE4F",
-  },
-  {
-    name: "Joe the Wolf",
-    role: "A friend by the pond",
-    quote: "Even wolves, sometimes, sit very still and listen.",
-    img: "/images/wolf-pooshie-pond.jpg",
-    tilt: -3,
-    color: "#1F2A37",
-  },
-  {
-    name: "The Raindrop",
-    role: "A whisper from the sky",
-    quote: "If you sit very quietly, you can hear its little song.",
-    img: "/images/raindrop.jpg",
-    tilt: 2,
-    color: "#21A1C4",
-  },
+/** Portrait styling, in the same order as `friends.list` in the dictionaries. */
+const LOOKS = [
+  { img: "/images/pooshie-portrait.jpeg", tilt: -2, color: "#E0195B" },
+  { img: "/images/grass-friends.jpg", tilt: 3, color: "#6BBE4F" },
+  { img: "/images/wolf-pooshie-pond.jpg", tilt: -3, color: "#1F2A37" },
+  { img: "/images/raindrop.jpg", tilt: 2, color: "#21A1C4" },
 ];
 
-export function Friends() {
+export function Friends({ dict }: { dict: Dictionary }) {
+  const t = dict.friends;
+  const friends = t.list.map((f, i) => ({ ...f, ...LOOKS[i] }));
+  const { quoteOpen, quoteClose } = dict.common;
   return (
     <section
       id="friends"
@@ -78,23 +56,20 @@ export function Friends() {
             }}
           >
             <div>
-              <Pill bg="#CFECF4" color="#0e5366">Meet the friends</Pill>
+              <Pill bg="#CFECF4" color="#0e5366">{t.pill}</Pill>
               <h2
                 id="friends-heading"
                 className="display"
                 style={{ fontSize: "clamp(40px, 6vw, 72px)", marginTop: 18 }}
               >
-                A whole forest
-                <br />
-                of <em>good souls</em>
+                <Rich text={t.heading} />
               </h2>
             </div>
             <p
               className="body-prose-muted"
               style={{ maxWidth: 380, fontSize: 17 }}
             >
-              Pooshie&apos;s world is full of unlikely friends. Hover any portrait
-              to hear how they enter the story.
+              {t.intro}
             </p>
           </div>
         </Reveal>
@@ -103,7 +78,7 @@ export function Friends() {
           className="grid-4"
           style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}
         >
-          {FRIENDS.map((f, i) => (
+          {friends.map((f, i) => (
             <Reveal key={f.name} delay={i * 90}>
               <article className="friend-card" tabIndex={0}>
                 <div
@@ -188,9 +163,9 @@ export function Friends() {
                       color: "#1F2A37",
                     }}
                   >
-                    <span style={{ color: f.color, fontWeight: 700 }}>&ldquo;</span>
+                    <span style={{ color: f.color, fontWeight: 700 }}>{quoteOpen}</span>
                     {f.quote}
-                    <span style={{ color: f.color, fontWeight: 700 }}>&rdquo;</span>
+                    <span style={{ color: f.color, fontWeight: 700 }}>{quoteClose}</span>
                   </p>
                 </div>
               </article>

@@ -1,26 +1,11 @@
 import { Pill } from "./icons/Pill";
 import { Reveal } from "./Reveal";
 import { SoftCloud } from "./icons/SoftCloud";
+import { Rich } from "./Rich";
+import type { Dictionary } from "@/lib/i18n";
 
-const PILLARS = [
-  {
-    eyebrow: "Voiced by",
-    title: "A real human, not AI",
-    body: "Every chapter is read by a professional actress who lives inside the story. You can hear the smile.",
-  },
-  {
-    eyebrow: "Written for",
-    title: "Bedtime, on purpose",
-    body: "Each chapter is 5–8 minutes — long enough to settle, short enough to not start a second one.",
-  },
-  {
-    eyebrow: "About",
-    title: "Kindness, gently",
-    body: "Lessons about empathy and friendship — never preachy, never loud. Stories first.",
-  },
-];
-
-export function StoryBand() {
+export function StoryBand({ dict }: { dict: Dictionary }) {
+  const t = dict.story;
   return (
     <section
       id="story"
@@ -37,7 +22,7 @@ export function StoryBand() {
       <div className="container" style={{ position: "relative", zIndex: 2, maxWidth: 980 }}>
         <Reveal>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <Pill bg="#CFECF4" color="#0e5366">A book of friendship</Pill>
+            <Pill bg="#CFECF4" color="#0e5366">{t.pill}</Pill>
           </div>
         </Reveal>
 
@@ -66,11 +51,9 @@ export function StoryBand() {
                 marginRight: 4,
               }}
             >
-              &ldquo;
+              {dict.common.quoteOpen}
             </span>
-            Pooshie was a little pink hedgehog who had never ever done
-            anybody any harm. The most interesting thing about him was that
-            <em style={{ color: "#E0195B" }}> his spines didn&apos;t prick</em>.
+            <Rich text={t.quote} emStyle={{ color: "#E0195B" }} />
             <span
               style={{
                 color: "#E0195B",
@@ -81,7 +64,7 @@ export function StoryBand() {
                 marginLeft: 4,
               }}
             >
-              &rdquo;
+              {dict.common.quoteClose}
             </span>
           </p>
         </Reveal>
@@ -99,7 +82,7 @@ export function StoryBand() {
               color: "#7c6c5a",
             }}
           >
-            From the audiobook · written by Mr. Push
+            {t.attribution}
           </div>
         </Reveal>
 
@@ -112,7 +95,7 @@ export function StoryBand() {
             marginTop: 80,
           }}
         >
-          {PILLARS.map((p, i) => (
+          {t.pillars.map((p, i) => (
             <Reveal key={p.title} delay={i * 100}>
               <div
                 style={{

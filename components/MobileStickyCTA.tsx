@@ -8,7 +8,7 @@ import { PlayGlyph } from "./icons/PlayGlyph";
  * Hides automatically once the in-page Listen section is on screen
  * (so it doesn't compete with the real player) and reappears after.
  */
-export function MobileStickyCTA() {
+export function MobileStickyCTA({ listenFree, getIt }: { listenFree: string; getIt: string }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export function MobileStickyCTA() {
           boxShadow: "0 12px 28px rgba(224,25,91,.34)",
         }}
       >
-        <PlayGlyph size={11} color="#fff" /> Listen free
+        <PlayGlyph size={11} color="#fff" /> {listenFree}
       </a>
       <a
         href="#get"
@@ -100,7 +100,7 @@ export function MobileStickyCTA() {
           boxShadow: "0 10px 22px rgba(31,42,55,.22)",
         }}
       >
-        Get it
+        {getIt}
       </a>
     </div>
   );

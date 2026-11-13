@@ -1,6 +1,8 @@
+import type { Chapter } from "@/lib/chapters";
+import { format, type Dictionary } from "@/lib/i18n";
 import { PlayGlyph } from "./icons/PlayGlyph";
 
-export function HeroMiniRibbon() {
+export function HeroMiniRibbon({ dict, chapter }: { dict: Dictionary; chapter: Chapter }) {
   return (
     <div className="container" style={{ position: "relative", zIndex: 2, paddingBottom: 0 }}>
       <a
@@ -21,7 +23,7 @@ export function HeroMiniRibbon() {
           maxWidth: 760,
           margin: "0 auto",
         }}
-        aria-label="Play free preview of Chapter 1: The Beginning"
+        aria-label={format(dict.hero.ribbonAria, { title: chapter.title })}
       >
         <span
           style={{
@@ -50,7 +52,7 @@ export function HeroMiniRibbon() {
               color: "#E0195B",
             }}
           >
-            Free preview
+            {dict.common.freePreview}
           </span>
           <span
             className="hero-ribbon-title"
@@ -65,7 +67,7 @@ export function HeroMiniRibbon() {
               textOverflow: "ellipsis",
             }}
           >
-            Chapter 1 — <em style={{ fontStyle: "italic", fontWeight: 400 }}>The Beginning</em>
+            {dict.common.chapter} {chapter.n} — <em style={{ fontStyle: "italic", fontWeight: 400 }}>{chapter.title}</em>
           </span>
         </div>
         <span

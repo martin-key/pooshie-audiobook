@@ -2,17 +2,18 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { Dictionary, Locale } from "@/lib/i18n";
 import { PlayGlyph } from "./icons/PlayGlyph";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
-const links = [
-  { label: "The Story", href: "#story" },
-  { label: "Free Chapter", href: "#listen" },
-  { label: "Friends", href: "#friends" },
-  { label: "Where to Listen", href: "#get" },
-  { label: "FAQ", href: "#faq" },
-];
+type Props = {
+  locale: Locale;
+  t: Dictionary["header"];
+  common: Dictionary["common"];
+};
 
-export function Header() {
+export function Header({ locale, t, common }: Props) {
+  const links = t.nav;
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -74,7 +75,7 @@ export function Header() {
             href="#top"
             onClick={closeMenu}
             style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}
-            aria-label="Pooshie home"
+            aria-label={t.homeAria}
           >
             <span
               style={{
@@ -107,14 +108,14 @@ export function Header() {
                 lineHeight: 1,
               }}
             >
-              pooshie
+              {common.brand.toLowerCase()}
             </span>
           </a>
 
           <nav
             className="header-nav"
             style={{ display: "flex", gap: 6, marginLeft: "auto" }}
-            aria-label="Primary"
+            aria-label={t.primaryNavAria}
           >
             {links.slice(0, 4).map((l) => (
               <a key={l.href} href={l.href} className="nav-link">
@@ -123,19 +124,16 @@ export function Header() {
             ))}
           </nav>
 
-          <a
-            href="#listen"
-            onClick={closeMenu}
-            className="btn btn-pink btn-sm header-cta"
-            style={{ marginLeft: "auto" }}
-          >
-            <PlayGlyph size={10} color="#fff" /> Listen free
+          <LanguageSwitcher locale={locale} label={t.languageAria} style={{ marginLeft: "auto" }} />
+
+          <a href="#listen" onClick={closeMenu} className="btn btn-pink btn-sm header-cta">
+            <PlayGlyph size={10} color="#fff" /> {common.listenFree}
           </a>
 
           <button
             type="button"
             className="menu-toggle"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? t.closeMenu : t.openMenu}
             aria-expanded={menuOpen}
             aria-controls="mobile-drawer"
             onClick={() => setMenuOpen((v) => !v)}
@@ -169,7 +167,7 @@ export function Header() {
         data-open={menuOpen}
         role="dialog"
         aria-modal="true"
-        aria-label="Site navigation"
+        aria-label={t.drawerAria}
         aria-hidden={!menuOpen}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
@@ -182,13 +180,13 @@ export function Header() {
               letterSpacing: "-0.01em",
             }}
           >
-            pooshie
+            {common.brand.toLowerCase()}
           </span>
           <button
             type="button"
             className="menu-toggle"
             style={{ display: "inline-flex" }}
-            aria-label="Close menu"
+            aria-label={t.closeMenu}
             onClick={closeMenu}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
@@ -197,7 +195,7 @@ export function Header() {
           </button>
         </div>
 
-        <nav style={{ display: "flex", flexDirection: "column" }} aria-label="Mobile primary">
+        <nav style={{ display: "flex", flexDirection: "column" }} aria-label={t.mobileNavAria}>
           {links.map((l) => (
             <a key={l.href} href={l.href} onClick={closeMenu} className="menu-link">
               {l.label}
@@ -211,8 +209,15 @@ export function Header() {
           className="btn btn-pink btn-lg"
           style={{ marginTop: 32, justifyContent: "center" }}
         >
-          <PlayGlyph size={11} color="#fff" /> Listen to chapter 1
+          <PlayGlyph size={11} color="#fff" /> {common.listenChapter1}
         </a>
+
+        <LanguageSwitcher
+          locale={locale}
+          label={t.languageAria}
+          className="lang-switch-lg"
+          style={{ marginTop: 24, alignSelf: "center" }}
+        />
 
         <p
           style={{
@@ -226,7 +231,7 @@ export function Header() {
             textAlign: "center",
           }}
         >
-          13 chapters · 1h 24m · ages 4–8
+          {t.drawerMeta}
         </p>
       </div>
     </>

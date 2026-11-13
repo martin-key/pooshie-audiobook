@@ -2,13 +2,17 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CHAPTERS, fmt, parseDur } from "@/lib/chapters";
-import { CHAPTER_1_AUDIO_SRC, FEATURED_PLATFORMS } from "@/lib/links";
+import { fmt, parseDur, type Chapter } from "@/lib/chapters";
+import type { ExternalLink } from "@/lib/links";
+import type { Locale } from "@/lib/i18n/config";
+import { format } from "@/lib/i18n/format";
+import type { Dictionary } from "@/lib/i18n";
 import { Pill } from "./icons/Pill";
 import { PlayGlyph } from "./icons/PlayGlyph";
 import { SoftCloud } from "./icons/SoftCloud";
 import { Reveal } from "./Reveal";
 import { LeadForm } from "./LeadForm";
+import { Rich } from "./Rich";
 
 function PlatformBadge({
   name,
@@ -16,12 +20,14 @@ function PlatformBadge({
   glyph,
   color,
   href,
+  ariaLabel,
 }: {
   name: string;
   sub: string;
   glyph: string;
   color: string;
   href?: string;
+  ariaLabel: string;
 }) {
   // Badges with a live storefront become real links; the rest stay decorative.
   const Tag = href ? "a" : "span";
@@ -30,7 +36,7 @@ function PlatformBadge({
         href,
         target: "_blank",
         rel: "noopener noreferrer",
-        "aria-label": `Listen to Pooshie on ${name} (opens in a new tab)`,
+        "aria-label": ariaLabel,
         className: "platform-badge-link",
       }
     : {};
@@ -135,11 +141,13 @@ function Waveform({
   playing,
   onSeek,
   disabled,
+  ariaLabel,
 }: {
   ratio: number;
   playing: boolean;
   onSeek: (clientX: number, rect: DOMRect) => void;
   disabled: boolean;
+  ariaLabel: string;
 }) {
   const bars = useMemo(() => {
     const a: number[] = [];
@@ -163,7 +171,7 @@ function Waveform({
         onSeek(e.clientX, rect);
       }}
       role="slider"
-      aria-label="Seek audio"
+      aria-label={ariaLabel}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(ratio * 100)}
@@ -232,13 +240,26 @@ function Waveform({
   );
 }
 
-export function Listen() {
+type Props = {
+  locale: Locale;
+  t: Dictionary["listen"];
+  common: Dictionary["common"];
+  regions: Dictionary["platforms"]["regions"];
+  leadForm: Dictionary["leadForm"];
+  chapters: Chapter[];
+  /** Storefront badges under the player (none hides the row). */
+  featured: ExternalLink[];
+  /** Free chapter recording for this site language. */
+  audioSrc: string;
+};
+
+export function Listen({ locale, t, common, regions, leadForm, chapters, featured, audioSrc }: Props) {
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [pos, setPos] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const ch = CHAPTERS[idx];
+  const ch = chapters[idx];
   const declaredTotal = parseDur(ch.dur);
   const [actualTotal, setActualTotal] = useState(declaredTotal);
   const total = ch.free && actualTotal > 0 ? actualTotal : declaredTotal;
@@ -334,22 +355,19 @@ export function Listen() {
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <Reveal>
           <div style={{ textAlign: "center", maxWidth: 720, margin: "0 auto 64px" }}>
-            <Pill bg="#fff" color="#E0195B">Free chapter</Pill>
+            <Pill bg="#fff" color="#E0195B">{t.pill}</Pill>
             <h2
               id="listen-heading"
               className="display"
               style={{ fontSize: "clamp(40px, 6vw, 76px)", margin: "20px 0 18px" }}
             >
-              Listen to the
-              <br />
-              first <em>chapter</em> tonight
+              <Rich text={t.heading} />
             </h2>
             <p
               className="body-prose-muted"
               style={{ fontSize: 19, maxWidth: 560, margin: "0 auto" }}
             >
-              Press play. Tuck in. The other twelve chapters will be there
-              when little eyes are ready for them.
+              {t.intro}
             </p>
           </div>
         </Reveal>
@@ -386,9 +404,9 @@ export function Listen() {
               {ch.free && (
                 <audio
                   ref={audioRef}
-                  src={CHAPTER_1_AUDIO_SRC}
+                  src={audioSrc}
                   preload="metadata"
-                  aria-label={`Audio for chapter ${ch.n}: ${ch.title}`}
+                  aria-label={format(t.audioAria, { n: ch.n, title: ch.title })}
                 />
               )}
 
@@ -406,7 +424,7 @@ export function Listen() {
                   <Image
                     key={ch.art}
                     src={ch.art}
-                    alt={`Chapter ${ch.n} artwork — ${ch.title}`}
+                    alt={format(t.artworkAlt, { n: ch.n, title: ch.title })}
                     fill
                     sizes="(max-width: 880px) 90vw, 600px"
                     style={{ objectFit: "contain", borderRadius: 22 }}
@@ -431,7 +449,7 @@ export function Listen() {
                       transform: "rotate(6deg)",
                     }}
                   >
-                    Free preview
+                    {common.freePreview}
                   </div>
                 )}
               </div>
@@ -439,7 +457,7 @@ export function Listen() {
               {/* Title + chapter # */}
               <div>
                 <span className="eyebrow" style={{ color: "#21A1C4" }}>
-                  Chapter {String(ch.n).padStart(2, "0")}
+                  {common.chapter} {String(ch.n).padStart(2, "0")}
                 </span>
                 <h3
                   style={{
@@ -451,9 +469,9 @@ export function Listen() {
                     color: "#1F2A37",
                   }}
                 >
-                  <em style={{ fontStyle: "italic", color: "#E0195B", fontWeight: 400 }}>&ldquo;</em>
+                  <em style={{ fontStyle: "italic", color: "#E0195B", fontWeight: 400 }}>{common.quoteOpen}</em>
                   {ch.title}
-                  <em style={{ fontStyle: "italic", color: "#E0195B", fontWeight: 400 }}>&rdquo;</em>
+                  <em style={{ fontStyle: "italic", color: "#E0195B", fontWeight: 400 }}>{common.quoteClose}</em>
                 </h3>
                 <p
                   className="body-prose-muted"
@@ -463,7 +481,13 @@ export function Listen() {
                 </p>
               </div>
 
-              <Waveform ratio={ratio} playing={playing && !!ch.free} onSeek={onSeek} disabled={!ch.free} />
+              <Waveform
+                ratio={ratio}
+                playing={playing && !!ch.free}
+                onSeek={onSeek}
+                disabled={!ch.free}
+                ariaLabel={t.seekAria}
+              />
 
               <div
                 style={{
@@ -490,12 +514,12 @@ export function Listen() {
                   justifyContent: "center",
                 }}
               >
-                <IconBtn icon="skip-back" ariaLabel="Previous 10 seconds" />
+                <IconBtn icon="skip-back" ariaLabel={t.back10} />
                 <button
                   type="button"
                   onClick={togglePlay}
                   disabled={!ch.free}
-                  aria-label={playing ? "Pause" : "Play chapter 1"}
+                  aria-label={playing ? t.pause : t.play}
                   className="listen-play-btn"
                   style={{
                     width: 76,
@@ -540,15 +564,12 @@ export function Listen() {
                     />
                   )}
                 </button>
-                <IconBtn icon="skip-fwd" ariaLabel="Next 10 seconds" />
+                <IconBtn icon="skip-fwd" ariaLabel={t.forward10} />
               </div>
 
               {/* Lead form below the controls */}
               <div style={{ marginTop: 8, paddingTop: 24, borderTop: "1px solid #f0e3cd" }}>
-                <LeadForm
-                  context="listen"
-                  copy="Want Pooshie tucked into your inbox? Get a bonus chapter and gentle updates."
-                />
+                <LeadForm context="listen" locale={locale} t={leadForm} copy={t.leadCopy} />
               </div>
             </div>
 
@@ -582,7 +603,7 @@ export function Listen() {
                     letterSpacing: "-0.005em",
                   }}
                 >
-                  All chapters
+                  {t.allChapters}
                 </h4>
                 <span
                   style={{
@@ -594,7 +615,7 @@ export function Listen() {
                     color: "#7c6c5a",
                   }}
                 >
-                  13 · 1h 24m
+                  {t.chaptersMeta}
                 </span>
               </div>
 
@@ -602,7 +623,7 @@ export function Listen() {
                 className="chapter-scroll"
                 style={{ overflowY: "auto", paddingRight: 16, flex: 1 }}
               >
-                {CHAPTERS.map((c, i) => {
+                {chapters.map((c, i) => {
                   const active = i === idx;
                   return (
                     <button
@@ -677,7 +698,7 @@ export function Listen() {
                             color: "#7c6c5a",
                           }}
                         >
-                          {c.dur} {c.free && "· free"}
+                          {c.dur} {c.free && `· ${t.free}`}
                         </span>
                       </span>
                       {!c.free && (
@@ -716,13 +737,14 @@ export function Listen() {
                   className="btn btn-pink"
                   style={{ width: "100%", justifyContent: "center" }}
                 >
-                  Get the full audiobook
+                  {t.getFull}
                 </a>
               </div>
             </div>
           </div>
         </Reveal>
 
+        {featured.length > 0 && (
         <Reveal delay={250}>
           <div style={{ textAlign: "center", marginTop: 56 }}>
             <p
@@ -736,17 +758,18 @@ export function Listen() {
                 marginBottom: 18,
               }}
             >
-              Listen on the platforms you already use
+              {t.platformsLabel}
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-              {FEATURED_PLATFORMS.map((pl) => (
+              {featured.map((pl) => (
                 <PlatformBadge
                   key={pl.href}
                   name={pl.name}
-                  sub={pl.short ?? pl.region}
+                  sub={regions[pl.short ?? pl.region]}
                   glyph={pl.glyph}
                   color={pl.color}
                   href={pl.href}
+                  ariaLabel={format(t.platformAria, { name: pl.name })}
                 />
               ))}
             </div>
@@ -763,10 +786,11 @@ export function Listen() {
                 borderBottom: "1px solid rgba(224,25,91,.35)",
               }}
             >
-              See every storefront →
+              {t.seeAll}
             </a>
           </div>
         </Reveal>
+        )}
       </div>
     </section>
   );

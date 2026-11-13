@@ -1,7 +1,12 @@
 import { Reveal } from "./Reveal";
 import { PlayGlyph } from "./icons/PlayGlyph";
+import { Rich } from "./Rich";
+import type { Dictionary, Locale } from "@/lib/i18n";
+import { STOREFRONTS } from "@/lib/links";
 
-export function FinalCTA() {
+export function FinalCTA({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+  const t = dict.finalCta;
+  const platformNames = [...new Set(STOREFRONTS[locale].featured.map((pl) => pl.name))];
   return (
     <section
       className="final-cta"
@@ -92,9 +97,7 @@ export function FinalCTA() {
               textWrap: "balance",
             }}
           >
-            Tonight&apos;s bedtime
-            <br />
-            story is <em style={{ color: "#F8C8D6" }}>waiting</em>
+            <Rich text={t.heading} emStyle={{ color: "#F8C8D6" }} />
           </h2>
         </Reveal>
         <Reveal delay={220}>
@@ -108,7 +111,7 @@ export function FinalCTA() {
               marginInline: "auto",
             }}
           >
-            Press play once. By the time chapter one ends, little eyes will already be drifting.
+            {t.body}
           </p>
         </Reveal>
         <Reveal delay={300}>
@@ -122,7 +125,7 @@ export function FinalCTA() {
             }}
           >
             <a href="#listen" className="btn btn-pink btn-lg">
-              <PlayGlyph size={12} color="#fff" /> Listen free
+              <PlayGlyph size={12} color="#fff" /> {dict.common.listenFree}
             </a>
             <a
               href="#get"
@@ -133,10 +136,11 @@ export function FinalCTA() {
                 boxShadow: "inset 0 0 0 1.5px rgba(255,255,255,0.25)",
               }}
             >
-              Get the audiobook
+              {dict.common.getAudiobook}
             </a>
           </div>
         </Reveal>
+        {platformNames.length > 0 && (
         <Reveal delay={400}>
           <p
             style={{
@@ -148,9 +152,10 @@ export function FinalCTA() {
               marginTop: 32,
             }}
           >
-            Available worldwide · Audible · Libro.fm · Everand · hoopla · Kobo · Storytel
+            {[t.availableWorldwide, ...platformNames].join(" · ")}
           </p>
         </Reveal>
+        )}
       </div>
     </section>
   );

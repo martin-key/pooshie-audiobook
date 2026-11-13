@@ -1,8 +1,11 @@
 import { Pill } from "./icons/Pill";
 import { Reveal } from "./Reveal";
-import { REVIEWS } from "@/lib/seo";
+import { Rich } from "./Rich";
+import { format, type Dictionary } from "@/lib/i18n";
 
-export function Reviews() {
+export function Reviews({ dict }: { dict: Dictionary }) {
+  const t = dict.reviews;
+  const { quoteOpen, quoteClose } = dict.common;
   return (
     <section
       style={{ position: "relative", padding: "60px 0 120px" }}
@@ -11,23 +14,33 @@ export function Reviews() {
       <div className="container">
         <Reveal>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <Pill bg="#FCE4EC" color="#E0195B">From bedtime to circle time</Pill>
+            <Pill bg="#FCE4EC" color="#E0195B">{t.pill}</Pill>
             <h2
               id="reviews-heading"
               className="display"
               style={{ fontSize: "clamp(36px, 5vw, 60px)", margin: "20px 0 12px" }}
             >
-              Loved by <em>little hearts</em>
-              <br />
-              and the grown-ups who tuck them in
+              <Rich text={t.heading} />
             </h2>
+            {t.translatedNote && (
+              <p
+                style={{
+                  fontFamily: "var(--font-ui)",
+                  fontSize: 12,
+                  color: "#7c6c5a",
+                  margin: 0,
+                }}
+              >
+                {t.translatedNote}
+              </p>
+            )}
           </div>
         </Reveal>
         <div
           className="grid-3 reviews-grid"
           style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 22 }}
         >
-          {REVIEWS.map((r, i) => (
+          {t.items.map((r, i) => (
             <Reveal key={r.author} delay={i * 100}>
               <figure
                 style={{
@@ -44,7 +57,7 @@ export function Reviews() {
               >
                 <div
                   style={{ display: "flex", gap: 4, color: "#FBC85A", fontSize: 18 }}
-                  aria-label={`${r.rating} out of 5 stars`}
+                  aria-label={format(t.starsAria, { rating: r.rating })}
                 >
                   {Array.from({ length: r.rating }).map((_, j) => (
                     <span key={j} aria-hidden>★</span>
@@ -74,7 +87,7 @@ export function Reviews() {
                     margin: 0,
                   }}
                 >
-                  &ldquo;{r.text}&rdquo;
+                  {quoteOpen}{r.text}{quoteClose}
                 </blockquote>
                 <figcaption>
                   <div

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { N8N_WEBHOOK_URL } from "@/lib/env";
+import { DEFAULT_LOCALE, hasLocale } from "@/lib/i18n/config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
     return noStore({ ok: false, error: "Too many requests. Try again in a minute." }, { status: 429 });
   }
 
-  let body: { email?: unknown; context?: unknown; hp?: unknown };
+  let body: { email?: unknown; context?: unknown; locale?: unknown; hp?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -54,6 +55,8 @@ export async function POST(req: NextRequest) {
 
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
   const context = typeof body.context === "string" ? body.context.slice(0, 50) : "unknown";
+  // Site language the visitor signed up from, so follow-up emails can match it.
+  const locale = typeof body.locale === "string" && hasLocale(body.locale) ? body.locale : DEFAULT_LOCALE;
 
   if (!EMAIL_RE.test(email) || email.length > 254) {
     return noStore({ ok: false, error: "Please enter a valid email." }, { status: 400 });
@@ -67,6 +70,7 @@ export async function POST(req: NextRequest) {
   const payload = {
     email,
     context,
+    locale,
     ts: new Date().toISOString(),
     ip,
     userAgent: req.headers.get("user-agent") ?? "",

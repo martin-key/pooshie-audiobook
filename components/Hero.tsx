@@ -1,9 +1,12 @@
+import { Fragment } from "react";
 import { Reveal } from "./Reveal";
 import { SoftCloud } from "./icons/SoftCloud";
 import { Squiggle } from "./icons/Squiggle";
 import { PlayGlyph } from "./icons/PlayGlyph";
 import { HeroPortraitStack } from "./HeroPortraitStack";
 import { HeroMiniRibbon } from "./HeroMiniRibbon";
+import type { Chapter } from "@/lib/chapters";
+import type { Dictionary } from "@/lib/i18n";
 
 function Stat({ n, label, small }: { n: string; label: string; small?: boolean }) {
   return (
@@ -36,7 +39,8 @@ function Stat({ n, label, small }: { n: string; label: string; small?: boolean }
   );
 }
 
-export function Hero() {
+export function Hero({ dict, firstChapter }: { dict: Dictionary; firstChapter: Chapter }) {
+  const t = dict.hero;
   return (
     <section id="top" style={{ position: "relative", overflow: "hidden", paddingTop: 40 }} aria-labelledby="hero-heading">
       {/* ambient watercolor blobs */}
@@ -117,7 +121,7 @@ export function Hero() {
                   display: "inline-block",
                 }}
               />
-              An audiobook for young & grown-up children
+              {t.eyebrow}
             </span>
           </Reveal>
 
@@ -127,12 +131,12 @@ export function Hero() {
               className="display"
               style={{ fontSize: "clamp(56px, 8vw, 108px)", margin: "22px 0 4px" }}
             >
-              A little
+              {t.titleStart}
               <br />
-              <span style={{ color: "#E0195B" }}>pink hedgehog</span>
+              <span style={{ color: "#E0195B" }}>{t.titleHighlight}</span>
               <br />
               <span style={{ position: "relative", display: "inline-block" }}>
-                whose spines
+                {t.titleUnderline}
                 <Squiggle
                   width={420}
                   color="#21A1C4"
@@ -150,7 +154,7 @@ export function Hero() {
                   fontWeight: 400,
                 }}
               >
-                don&apos;t prick.
+                {t.titleEnd}
               </em>
             </h1>
           </Reveal>
@@ -160,9 +164,8 @@ export function Hero() {
               className="body-prose"
               style={{ maxWidth: 520, marginTop: 28, fontSize: 20 }}
             >
-              <em style={{ fontStyle: "italic" }}>Stories of Pooshie &amp; Kitty</em> — thirteen gentle bedtime
-              tales, voiced like a warm room and a soft lamp. Listen to the first
-              chapter, free.
+              <em style={{ fontStyle: "italic" }}>{t.introTitle}</em>
+              {t.introRest}
             </p>
           </Reveal>
 
@@ -180,10 +183,10 @@ export function Hero() {
                   }}
                   aria-hidden
                 />
-                <PlayGlyph size={11} color="#fff" /> Listen to chapter 1
+                <PlayGlyph size={11} color="#fff" /> {dict.common.listenChapter1}
               </a>
               <a href="#get" className="btn btn-ghost btn-lg">
-                Get the audiobook
+                {dict.common.getAudiobook}
               </a>
             </div>
           </Reveal>
@@ -199,23 +202,24 @@ export function Hero() {
                 flexWrap: "wrap",
               }}
             >
-              <Stat n="13" label="Bedtime chapters" />
-              <span style={{ width: 1, height: 32, background: "#E5D8C2" }} aria-hidden />
-              <Stat n="1h 24m" label="Total runtime" small />
-              <span style={{ width: 1, height: 32, background: "#E5D8C2" }} aria-hidden />
-              <Stat n="4–8" label="For ages" small />
+              {t.stats.map((s, i) => (
+                <Fragment key={s.label}>
+                  {i > 0 && <span style={{ width: 1, height: 32, background: "#E5D8C2" }} aria-hidden />}
+                  <Stat n={s.n} label={s.label} small={i > 0} />
+                </Fragment>
+              ))}
             </div>
           </Reveal>
         </div>
 
         {/* RIGHT — portrait stack */}
         <Reveal delay={150}>
-          <HeroPortraitStack />
+          <HeroPortraitStack t={t} />
         </Reveal>
       </div>
 
       <Reveal delay={500}>
-        <HeroMiniRibbon />
+        <HeroMiniRibbon dict={dict} chapter={firstChapter} />
       </Reveal>
     </section>
   );

@@ -48,21 +48,38 @@ The site is engineered for both classic SEO and **Generative Engine Optimization
 - **A11y as ranking signal** — semantic landmarks, 21+ `aria-label`s, 17 `aria-labelledby`s, visible focus rings, full `prefers-reduced-motion` honoring on every animation.
 - **Performance** — fonts via `next/font` (no render-blocking CDN call), priority hero image with `sizes`, explicit `width`/`height` (CLS = 0), only the audio player + lead form ship as client components. The landing page is statically prerendered.
 
+## Languages
+
+The site is in **English** (`/`) and **German** (`/de`).
+
+- `proxy.ts` serves English unprefixed (rewritten to `/en` internally), passes `/de` through, and redirects `/en/…` to the unprefixed URL. A first visit to `/` from a German browser goes to `/de`; once someone picks a language in the EN · DE switcher, the `NEXT_LOCALE` cookie wins.
+- All copy lives in `lib/i18n/dictionaries/<code>.ts`. `en.ts` defines the shape; other languages are typed against it, and `tests/i18n.test.ts` fails if a key, chapter or storefront label is missing. In dictionary strings, `\n` is a line break, `*text*` is emphasis, and `{name}` is a placeholder.
+- Each page gets `hreflang` alternates (`en`, `de`, `x-default`), and the sitemap lists both URLs.
+- The free chapter audio and the storefronts are the English edition for now. When a German edition is out, set `CHAPTER_1_AUDIO_SRC.de` in `lib/links.ts` and update the German copy that says "auf Englisch".
+
+**Adding a language:** add the code to `LOCALES` and `LOCALE_META` in `lib/i18n/config.ts`, copy `de.ts` to `<code>.ts` and translate it, register it in `lib/i18n/index.ts`, and add an audio entry in `lib/links.ts`. Routing, the switcher, hreflang and the sitemap pick it up.
+
 ## Project structure
 
 ```
+proxy.ts                    # locale routing (see Languages)
+
 app/
-├── layout.tsx              # fonts, default metadata, Organization + WebSite JSON-LD
-├── page.tsx                # composition; Audiobook + FAQPage + Breadcrumb JSON-LD
+├── [lang]/
+│   ├── layout.tsx          # root layout: <html lang>, fonts, localized metadata, Organization + WebSite JSON-LD
+│   ├── page.tsx            # composition; Audiobook + FAQPage + Breadcrumb JSON-LD
+│   ├── not-found.tsx       # localized 404
+│   └── [...rest]/page.tsx  # sends unknown paths to the localized 404
 ├── globals.css             # design tokens, animations, .btn, .container
-├── sitemap.ts              # dynamic sitemap
+├── sitemap.ts              # sitemap with hreflang alternates
 ├── robots.ts               # robots.txt with AI bot allowlist
-├── not-found.tsx
 ├── icon.png / apple-icon.png
-└── api/lead/route.ts       # POST { email, context } → forwards to N8N_WEBHOOK_URL
+└── api/lead/route.ts       # POST { email, context, locale } → forwards to N8N_WEBHOOK_URL
 
 components/
 ├── Header.tsx              # 'use client' — sticky scroll-blur
+├── LanguageSwitcher.tsx    # 'use client' — EN · DE pill, remembers the choice
+├── Rich.tsx                # renders \n and *emphasis* from dictionary strings
 ├── Hero.tsx, HeroPortraitStack.tsx, HeroMiniRibbon.tsx
 ├── StoryBand.tsx
 ├── Listen.tsx              # 'use client' — real <audio>, scrubber, chapter list
@@ -73,9 +90,10 @@ components/
 └── icons/                  # PlayGlyph, SoftCloud, Squiggle, Pill
 
 lib/
-├── chapters.ts             # CHAPTERS data, fmt(), parseDur(), ISBN, AUTHOR
+├── i18n/                   # locales, dictionaries (en, de), format()
+├── chapters.ts             # chapter durations/artwork, localizeChapters(), fmt(), parseDur(), ISBN, AUTHOR
 ├── links.ts                # SOCIAL_LINKS + every storefront URL (single source of truth)
-├── seo.ts                  # JSON-LD builders + REVIEWS + FAQS data
+├── seo.ts                  # localized JSON-LD builders
 └── env.ts                  # SITE_URL, N8N_WEBHOOK_URL
 
 public/
@@ -89,6 +107,7 @@ tests/
 ├── setup.ts                # jsdom + IntersectionObserver stubs
 ├── chapters.test.ts        # data integrity + fmt/parseDur round-trip
 ├── seo.test.ts             # JSON-LD schemas, offers, ratings
+├── i18n.test.ts            # dictionary parity, locale helpers, proxy routing
 └── lead-route.test.ts      # API: validation, honeypot, rate limit
 ```
 
