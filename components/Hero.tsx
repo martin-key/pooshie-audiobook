@@ -156,16 +156,17 @@ export function Hero({ dict, firstChapter }: { dict: Dictionary; firstChapter: C
               >
                 {t.titleEnd}
               </em>
+              {/* The product, in plain words, as part of the heading: title, what it is, for whom. */}
+              <span className="hero-title-sub">{t.titleSub}</span>
             </h1>
           </Reveal>
 
           <Reveal delay={220}>
             <p
               className="body-prose"
-              style={{ maxWidth: 520, marginTop: 28, fontSize: 20 }}
+              style={{ maxWidth: 520, marginTop: 20, fontSize: 20 }}
             >
-              <em style={{ fontStyle: "italic" }}>{t.introTitle}</em>
-              {t.introRest}
+              {t.intro}
             </p>
           </Reveal>
 

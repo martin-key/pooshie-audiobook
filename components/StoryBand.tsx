@@ -21,14 +21,14 @@ export function StoryBand({ dict }: { dict: Dictionary }) {
 
       <div className="container" style={{ position: "relative", zIndex: 2, maxWidth: 980 }}>
         <Reveal>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
+          {/* The section's heading: keeps the outline h1 → h2 → h3 (the pillars below are h3). */}
+          <h2 id="story-heading" style={{ textAlign: "center", margin: "0 0 56px", fontSize: 11, lineHeight: 1 }}>
             <Pill bg="#CFECF4" color="#0e5366">{t.pill}</Pill>
-          </div>
+          </h2>
         </Reveal>
 
         <Reveal delay={120}>
           <p
-            id="story-heading"
             className="display"
             style={{
               fontSize: "clamp(28px, 4vw, 48px)",

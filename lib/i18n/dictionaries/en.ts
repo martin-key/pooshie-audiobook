@@ -80,7 +80,7 @@ const faqs: Faq[] = [
   },
   {
     q: "Is the first chapter really free?",
-    a: "Yes. Press play on Chapter 1 — \"The Beginning\" — anywhere on this page. No email required, no signup, no card. Just the story.",
+    a: "Yes — the first chapter, \"The Beginning\", is free to stream on this page. No email, no signup, no card. The full audiobook with all 13 chapters is not free: it is sold by the audiobook stores listed on this page.",
   },
   {
     q: "What's the audiobook about?",
@@ -165,6 +165,7 @@ export const en = {
       "audiobook for kids",
       "ages 4-8",
       "pooshie",
+      "pooshie pink hedgehog",
       "hedgehog story",
       "kindness stories",
       "sleep stories for children",
@@ -184,7 +185,6 @@ export const en = {
     genres: ["Children's literature", "Bedtime stories", "Animal fables"],
     keywords:
       "children's audiobook, bedtime story, hedgehog, ages 4-8, gentle storytelling, kindness, friendship, sleep stories",
-    breadcrumbHome: "Home",
   },
 
   header: {
@@ -205,9 +205,10 @@ export const en = {
     titleHighlight: "pink hedgehog",
     titleUnderline: "whose spines",
     titleEnd: "don't prick.",
-    introTitle: "Stories of Pooshie & Kitty",
-    introRest:
-      " — thirteen gentle bedtime tales, voiced like a warm room and a soft lamp. Listen to the first chapter, free.",
+    /** Plain product line inside the H1, under the poetic title: book title, what it is, for whom. */
+    titleSub: "The Tales of Pooshie and Kitty — 13 bedtime stories as an audiobook for kids aged 4 to 8.",
+    intro:
+      "Thirteen gentle bedtime tales, voiced like a warm room and a soft lamp. Chapter 1 is free to stream right here, no signup; the full audiobook is sold by the audiobook stores below.",
     stats: [
       { n: "13", label: "Bedtime chapters" },
       { n: RUNTIME, label: "Total runtime" },
@@ -289,6 +290,29 @@ export const en = {
 
   platforms: { regions },
 
+  /** "Facts at a glance" box: the plain facts AI assistants and search engines quote. */
+  facts: {
+    heading: "Facts at a glance",
+    title: "Title",
+    titleValue: "The Tales of Pooshie and Kitty",
+    author: "Author",
+    narrator: "Narrator",
+    narratorValue: "A professional voice actress (a real human, never AI)",
+    chapters: "Chapters",
+    chaptersValue: "13 chapters, 5–8 minutes each",
+    runtime: "Total runtime",
+    runtimeValue: `${RUNTIME} (1 hour 24 minutes)`,
+    age: "Ages",
+    ageValue: "4 to 8",
+    isbn: "ISBN",
+    released: "Release date",
+    free: "Free",
+    freeValue: "Chapter 1 only, streamed on this page with no signup. The full audiobook is not free.",
+    audiobook: "Audiobook",
+    ebook: "Ebook",
+    ebookValue: "Kindle, on Amazon",
+  },
+
   faq: {
     pill: "Questions, gently answered",
     heading: "The little things *parents ask*",
@@ -303,7 +327,6 @@ export const en = {
   },
 
   footer: {
-    srHeading: "Footer",
     tagline:
       "A 13-chapter bedtime audiobook for ages 4–8. Gentle stories about a little pink hedgehog whose spines don't prick.",
     socialAria: "Pooshie on {name} (opens in a new tab)",
@@ -316,7 +339,7 @@ export const en = {
     navAria: "Footer",
     contact: "Contact",
     privacy: "Privacy",
-    copyright: "© {year} Pooshie & Kitty · audiobook.pooshie.net · ISBN {isbn}",
+    copyright: "© {year} Pooshie & Kitty · pooshieaudiobook.com · ISBN {isbn}",
   },
 
   leadForm: {

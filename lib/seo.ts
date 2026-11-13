@@ -1,17 +1,13 @@
 import { SITE_URL } from "./env";
-import { AGE_RANGE, AUTHOR, ISBN, localizeChapters, TOTAL_RUNTIME_ISO } from "./chapters";
-import { SOCIAL_LINKS, STOREFRONTS } from "./links";
+import { AGE_RANGE, AUTHOR, localizeChapters, TOTAL_RUNTIME_ISO } from "./chapters";
+import { EDITIONS, isUpcoming } from "./editions";
+import { CHAPTER_1_AUDIO, SOCIAL_LINKS, STOREFRONTS } from "./links";
 import { getDictionary, LOCALE_META, LOCALES, localePath, type Locale } from "./i18n";
 
-/**
- * The edition each page language describes. The German edition's ISBN isn't known yet,
- * and its reviews on the page are translated English-edition reviews, so they stay out
- * of its structured data until it has reviews of its own.
- */
-const EDITIONS: Record<Locale, { inLanguage: string; isbn?: string; ratedByPageReviews: boolean }> = {
-  en: { inLanguage: "en", isbn: ISBN, ratedByPageReviews: true },
-  de: { inLanguage: "de", ratedByPageReviews: false },
-};
+export const CONTACT_EMAIL = "hello@pooshie.net";
+
+/** `@id` of the one Organization node every page carries (in the layout). */
+export const ORG_ID = `${SITE_URL}/#org`;
 
 /** Character/brand name on this page, plus the names used in other languages. */
 function brandNames(locale: Locale): { name: string; alternateName: string[] } {
@@ -23,35 +19,28 @@ function brandNames(locale: Locale): { name: string; alternateName: string[] } {
 type JsonLd = Record<string, unknown>;
 
 /** Absolute URL of the home page in `locale`, without a trailing slash. */
-function pageUrl(locale: Locale): string {
+export function pageUrl(locale: Locale): string {
   const path = localePath(locale);
   return path === "/" ? SITE_URL : `${SITE_URL}${path}`;
 }
+
+/** "6:48" → "PT6M48S" */
+const isoDuration = (mmss: string) => {
+  const [m, s] = mmss.split(":");
+  return `PT${Number(m)}M${Number(s)}S`;
+};
 
 export function buildOrgJsonLd(locale: Locale): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": ORG_ID,
     ...brandNames(locale),
     url: SITE_URL,
     logo: `${SITE_URL}/icon.png`,
+    email: CONTACT_EMAIL,
     sameAs: Object.values(SOCIAL_LINKS),
     description: getDictionary(locale).seo.orgDescription,
-  };
-}
-
-export function buildBreadcrumbJsonLd(locale: Locale): JsonLd {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: getDictionary(locale).seo.breadcrumbHome,
-        item: pageUrl(locale),
-      },
-    ],
   };
 }
 
@@ -60,7 +49,7 @@ export function buildAudiobookJsonLd(locale: Locale): JsonLd {
   const reviews = dict.reviews.items;
   const url = pageUrl(locale);
   const edition = EDITIONS[locale];
-  const brand = brandNames(locale).name;
+  const stores = STOREFRONTS[locale];
 
   const aggregateRating = {
     "@type": "AggregateRating",
@@ -83,13 +72,51 @@ export function buildAudiobookJsonLd(locale: Locale): JsonLd {
     inLanguage: LOCALE_META[locale].htmlLang,
   }));
 
-  const hasPart = localizeChapters(dict.chapters).map((c) => ({
+  const chapters = localizeChapters(dict.chapters);
+  const hasPart = chapters.map((c) => ({
     "@type": "Chapter",
     position: c.n,
     name: c.title,
     description: c.blurb,
-    timeRequired: `PT${c.dur.split(":")[0]}M${c.dur.split(":")[1]}S`,
+    timeRequired: isoDuration(c.dur),
   }));
+
+  // Where the audiobook is sold. No prices: the book is sold by the storefronts, not here.
+  const availability = isUpcoming(edition) ? "https://schema.org/PreOrder" : "https://schema.org/InStock";
+  const offers = stores.audiobook.map((s) => ({
+    "@type": "Offer",
+    url: s.href,
+    availability,
+    seller: { "@type": "Organization", name: s.name },
+  }));
+
+  // The ebook of the same edition (Kindle).
+  const [ebook, ...ebookMirrors] = stores.ebook;
+  const workExample = ebook
+    ? {
+        "@type": "Book",
+        bookFormat: "https://schema.org/EBook",
+        inLanguage: edition.inLanguage,
+        url: ebook.href,
+        ...(ebookMirrors.length ? { sameAs: ebookMirrors.map((e) => e.href) } : {}),
+      }
+    : undefined;
+
+  // The free chapter, but only when the recording on the page is in this edition's language.
+  const audio = CHAPTER_1_AUDIO[locale];
+  const free = chapters.find((c) => c.free) ?? chapters[0];
+  const associatedMedia =
+    audio.inLanguage === edition.inLanguage
+      ? {
+          "@type": "AudioObject",
+          name: `${dict.common.chapter} ${free.n} – ${free.title} (${dict.listen.free})`,
+          contentUrl: `${SITE_URL}${audio.src}`,
+          encodingFormat: "audio/mpeg",
+          duration: isoDuration(audio.duration),
+          inLanguage: audio.inLanguage,
+          isAccessibleForFree: true,
+        }
+      : undefined;
 
   return {
     "@context": "https://schema.org",
@@ -100,20 +127,25 @@ export function buildAudiobookJsonLd(locale: Locale): JsonLd {
     description: dict.seo.bookDescription,
     inLanguage: edition.inLanguage,
     ...(edition.isbn ? { isbn: edition.isbn } : {}),
+    ...(edition.datePublished ? { datePublished: edition.datePublished } : {}),
     bookFormat: "https://schema.org/AudiobookFormat",
     author: { "@type": "Person", name: AUTHOR },
     readBy: { "@type": "Person", name: dict.seo.narrator },
     duration: TOTAL_RUNTIME_ISO,
     timeRequired: TOTAL_RUNTIME_ISO,
-    numberOfPages: undefined,
     typicalAgeRange: AGE_RANGE,
     genre: dict.seo.genres,
-    publisher: { "@type": "Organization", name: brand, url: SITE_URL },
+    publisher: { "@id": ORG_ID },
     image: `${SITE_URL}/og-default.jpg`,
     url,
+    // Only chapter 1 is free; the whole book is not.
+    isAccessibleForFree: false,
     hasPart,
+    ...(associatedMedia ? { associatedMedia } : {}),
+    ...(offers.length ? { offers } : {}),
+    ...(workExample ? { workExample } : {}),
     ...(edition.ratedByPageReviews ? { aggregateRating, review } : {}),
-    sameAs: STOREFRONTS[locale].sameAs.map((pl) => pl.href),
+    sameAs: stores.sameAs.map((pl) => pl.href),
     keywords: dict.seo.keywords,
   };
 }
@@ -141,5 +173,6 @@ export function buildWebsiteJsonLd(locale: Locale): JsonLd {
     name: brandNames(locale).name,
     url: pageUrl(locale),
     inLanguage: LOCALE_META[locale].htmlLang,
+    publisher: { "@id": ORG_ID },
   };
 }

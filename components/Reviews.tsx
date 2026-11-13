@@ -57,6 +57,7 @@ export function Reviews({ dict }: { dict: Dictionary }) {
               >
                 <div
                   style={{ display: "flex", gap: 4, color: "#FBC85A", fontSize: 18 }}
+                  role="img"
                   aria-label={format(t.starsAria, { rating: r.rating })}
                 >
                   {Array.from({ length: r.rating }).map((_, j) => (

@@ -168,7 +168,7 @@ export function Header({ locale, t, common }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label={t.drawerAria}
-        aria-hidden={!menuOpen}
+        inert={!menuOpen}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
           <span
