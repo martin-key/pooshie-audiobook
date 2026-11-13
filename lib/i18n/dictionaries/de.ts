@@ -339,6 +339,14 @@ export const de: Dictionary = {
     getIt: "Hörbuch",
   },
 
+  consent: {
+    title: "Cookies, ganz sanft",
+    body: "Mit deiner Zustimmung nutzen wir Cookies für Statistik und Marketing (Google), um zu sehen, wie Familien Puschi finden und wie unsere Werbung wirkt. Ohne deine Zustimmung wird nichts davon gespeichert. Du kannst deine Wahl jederzeit unter „Cookie-Einstellungen“ unten auf der Seite ändern.",
+    accept: "Alle akzeptieren",
+    reject: "Nur notwendige",
+    settings: "Cookie-Einstellungen",
+  },
+
   notFound: {
     title: "Seite nicht gefunden",
     eyebrow: "404 · auf der Wiese verlaufen",

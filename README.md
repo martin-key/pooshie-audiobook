@@ -59,6 +59,15 @@ The site is in **English** (`/`) and **German** (`/de`).
 
 **Adding a language:** add the code to `LOCALES` and `LOCALE_META` in `lib/i18n/config.ts`, copy `de.ts` to `<code>.ts` and translate it, register it in `lib/i18n/index.ts`, and add an audio entry in `lib/links.ts`. Routing, the switcher, hreflang and the sitemap pick it up.
 
+## Analytics & consent
+
+Google Tag Manager (`GTM-MRFH5P69`, set in `lib/env.ts`, overridable with `NEXT_PUBLIC_GTM_ID`) loads on every page through `@next/third-parties`. Google Consent Mode v2 is set up in `lib/consent.ts`:
+
+- An inline `<head>` script sets everything that stores data (`analytics_storage`, `ad_storage`, `ad_user_data`, `ad_personalization`) to **denied** before GTM loads, and re-applies a returning visitor's saved choice.
+- `components/ConsentBanner.tsx` asks first-time visitors, with "Accept all" and "Only necessary" as equal options. The choice is saved in `localStorage` (`pooshie-consent`).
+- The footer's "Cookie settings" link reopens the banner so visitors can change or withdraw consent.
+- Every choice pushes `{ event: "cookie_consent_update" }` to the dataLayer, which you can use as a trigger in GTM.
+
 ## Project structure
 
 ```

@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Cardo, Inter } from "next/font/google";
-import { SITE_URL } from "@/lib/env";
+import { GoogleTagManager } from "@next/third-parties/google";
+import { GTM_ID, SITE_URL } from "@/lib/env";
 import { getDictionary, hasLocale, LOCALE_META, LOCALES, localePath } from "@/lib/i18n";
 import { buildOrgJsonLd, buildWebsiteJsonLd } from "@/lib/seo";
+import { consentBootstrapScript } from "@/lib/consent";
+import { ConsentBanner } from "@/components/ConsentBanner";
 import "../globals.css";
 
 const cardo = Cardo({
@@ -105,6 +108,8 @@ export default async function RootLayout({
   return (
     <html lang={LOCALE_META[lang].htmlLang} className={`${cardo.variable} ${inter.variable}`}>
       <head>
+        {/* Consent Mode defaults must be in place before GTM loads (it loads after hydration). */}
+        {GTM_ID && <script dangerouslySetInnerHTML={{ __html: consentBootstrapScript() }} />}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildOrgJsonLd(lang)) }}
@@ -114,7 +119,11 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildWebsiteJsonLd(lang)) }}
         />
       </head>
-      <body>{children}</body>
+      {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
+      <body>
+        {children}
+        {GTM_ID && <ConsentBanner t={getDictionary(lang).consent} />}
+      </body>
     </html>
   );
 }
