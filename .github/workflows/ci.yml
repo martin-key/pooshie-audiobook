@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SITE_URL: https://audiobook.pooshie.net
+  SITE_URL: https://www.pooshieaudiobook.com
 
 jobs:
   verify:
