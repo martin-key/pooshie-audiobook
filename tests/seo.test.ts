@@ -3,10 +3,16 @@ import {
   buildAudiobookJsonLd,
   buildFaqJsonLd,
   buildOrgJsonLd,
-  buildBreadcrumbJsonLd,
   buildWebsiteJsonLd,
+  ORG_ID,
 } from "@/lib/seo";
 import { getDictionary } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/env";
+import { SITE_UPDATED } from "@/lib/editions";
+import { llmsTxt } from "@/lib/llms";
+import { CHAPTER_1_AUDIO } from "@/lib/links";
+import robots from "@/app/robots";
+import sitemap from "@/app/sitemap";
 
 const REVIEWS = getDictionary("en").reviews.items;
 const FAQS = getDictionary("en").faq.items;
@@ -19,6 +25,44 @@ describe("Organization JSON-LD", () => {
   });
   it("references the configured site URL", () => {
     expect(String(ld.url)).toMatch(/^https?:\/\//);
+  });
+  it("has the @id the other nodes point to as publisher", () => {
+    expect(ld["@id"]).toBe(ORG_ID);
+  });
+});
+
+describe("Site address", () => {
+  // audiobook.pooshie.net no longer exists in DNS; nothing may point there.
+  const OLD_HOST = /https?:\/\/[a-z.]*pooshie\.net/;
+
+  it("defaults to www.pooshieaudiobook.com", () => {
+    expect(SITE_URL).toBe("https://www.pooshieaudiobook.com");
+  });
+
+  it("is the only host in JSON-LD, robots.txt, the sitemap and llms.txt", () => {
+    const blobs = [
+      ...(["en", "de"] as const).flatMap((l) => [
+        buildOrgJsonLd(l),
+        buildAudiobookJsonLd(l),
+        buildWebsiteJsonLd(l),
+      ]),
+      robots(),
+      sitemap(),
+    ].map((x) => JSON.stringify(x));
+    blobs.push(llmsTxt());
+    for (const blob of blobs) expect(blob).not.toMatch(OLD_HOST);
+  });
+
+  it("robots.txt has no non-standard Host line and points to the sitemap", () => {
+    const r = robots();
+    expect(r.host).toBeUndefined();
+    expect(r.sitemap).toBe(`${SITE_URL}/sitemap.xml`);
+  });
+
+  it("the sitemap lists / and /de with the content date, not the build time", () => {
+    const entries = sitemap();
+    expect(entries.map((e) => e.url)).toEqual([`${SITE_URL}/`, `${SITE_URL}/de`]);
+    for (const e of entries) expect(e.lastModified).toBe(SITE_UPDATED);
   });
 });
 
@@ -40,8 +84,30 @@ describe("Audiobook JSON-LD", () => {
     expect((ld.hasPart as unknown[]).length).toBe(13);
   });
 
-  it("advertises no on-site prices — the book is sold by third-party storefronts", () => {
-    expect(ld.offers).toBeUndefined();
+  it("lists the storefronts as offers, without on-site prices", () => {
+    const offers = ld.offers as Array<Record<string, unknown>>;
+    expect(offers.length).toBeGreaterThanOrEqual(9);
+    for (const o of offers) {
+      expect(o["@type"]).toBe("Offer");
+      expect(String(o.url)).toMatch(/^https:\/\//);
+      expect(o.price).toBeUndefined();
+    }
+  });
+
+  it("says the book is not free, and offers chapter 1 as a free recording", () => {
+    expect(ld.isAccessibleForFree).toBe(false);
+    const media = ld.associatedMedia as Record<string, unknown>;
+    expect(media["@type"]).toBe("AudioObject");
+    expect(media.contentUrl).toBe(`${SITE_URL}${CHAPTER_1_AUDIO.en.src}`);
+    expect(media.inLanguage).toBe("en");
+    expect(media.duration).toMatch(/^PT\d+M\d+S$/);
+    expect(media.isAccessibleForFree).toBe(true);
+  });
+
+  it("points to the Organization as publisher and has the Kindle edition as workExample", () => {
+    expect(ld.publisher).toEqual({ "@id": ORG_ID });
+    const ebook = ld.workExample as Record<string, unknown>;
+    expect(ebook.bookFormat).toBe("https://schema.org/EBook");
   });
 
   it("lists every storefront under sameAs", () => {
@@ -76,15 +142,6 @@ describe("FAQ JSON-LD", () => {
       expect(ans["@type"]).toBe("Answer");
       expect(typeof ans.text).toBe("string");
     }
-  });
-});
-
-describe("Breadcrumb JSON-LD", () => {
-  it("has a single home crumb", () => {
-    const ld = buildBreadcrumbJsonLd("en") as Record<string, unknown>;
-    expect(ld["@type"]).toBe("BreadcrumbList");
-    const items = ld.itemListElement as unknown[];
-    expect(items).toHaveLength(1);
   });
 });
 
@@ -140,6 +197,13 @@ describe("German structured data", () => {
     expect(String(book.url)).toMatch(/\/de$/);
     const parts = book.hasPart as Array<Record<string, unknown>>;
     expect(parts[0].name).toBe("Der Anfang");
+    // The free chapter is Melina Camus's German recording, with the file's own length.
+    const media = book.associatedMedia as Record<string, unknown>;
+    expect(CHAPTER_1_AUDIO.de.src).not.toBe(CHAPTER_1_AUDIO.en.src);
+    expect(media.inLanguage).toBe("de");
+    expect(media.contentUrl).toBe(`${SITE_URL}${CHAPTER_1_AUDIO.de.src}`);
+    expect(media.duration).toBe("PT8M39S");
+    expect(book.isAccessibleForFree).toBe(false);
 
     const site = buildWebsiteJsonLd("de");
     expect(site.inLanguage).toBe("de");
@@ -156,11 +220,33 @@ describe("German structured data", () => {
     const de = getDictionary("de");
     const line = "Gute-Nacht-Geschichten über Freundschaft, Mitgefühl und Mut – für Kinder von 4 bis 8.";
     expect(de.meta.homeDescription.startsWith(line)).toBe(true);
-    expect(de.hero.introRest).toContain(line);
+    expect(de.hero.intro).toContain(line);
     const visible = JSON.stringify(de);
     for (const term of ["Gute-Nacht-Geschichten", "Einschlafgeschichten", "Hörbuch für Kinder"]) {
       expect(de.meta.keywords).toContain(term);
       expect(visible).toContain(term);
     }
+  });
+
+  it("names the product, Puschi and the rosa Igel in title and H1", () => {
+    const de = getDictionary("de");
+    expect(de.meta.homeTitle).toContain("Puschi, der rosa Igel");
+    for (const term of ["Puschi", "Hörbuch", "Gute-Nacht-Geschichten", "4 bis 8", "Melina Camus"]) {
+      expect(de.hero.titleSub).toContain(term);
+    }
+  });
+
+  it("says plainly that only chapter 1 is free", () => {
+    const de = getDictionary("de");
+    expect(de.facts.freeValue).toMatch(/Nur Kapitel 1/);
+    expect(de.faq.items.some((f) => /ganze Hörbuch gratis/.test(f.q) && /^Nein/.test(f.a))).toBe(true);
+  });
+
+  it("has a German section in llms.txt with the narrator and the German title", () => {
+    const txt = llmsTxt();
+    expect(txt).toContain("## Deutsche Ausgabe");
+    expect(txt).toContain("Erzählungen über Puschi und Kitty");
+    expect(txt).toContain("Melina Camus");
+    expect(txt).toContain("https://www.amazon.de/dp/B0HRFYL6SK");
   });
 });

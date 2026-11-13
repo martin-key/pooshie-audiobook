@@ -12,13 +12,9 @@ import { FinalCTA } from "@/components/FinalCTA";
 import { Footer } from "@/components/Footer";
 import { MobileStickyCTA } from "@/components/MobileStickyCTA";
 import { localizeChapters } from "@/lib/chapters";
-import { CHAPTER_1_AUDIO_SRC, STOREFRONTS } from "@/lib/links";
+import { CHAPTER_1_AUDIO, STOREFRONTS } from "@/lib/links";
 import { alternateLanguages, getDictionary, hasLocale, localePath } from "@/lib/i18n";
-import {
-  buildAudiobookJsonLd,
-  buildBreadcrumbJsonLd,
-  buildFaqJsonLd,
-} from "@/lib/seo";
+import { buildAudiobookJsonLd, buildFaqJsonLd } from "@/lib/seo";
 
 type Params = { params: Promise<{ lang: string }> };
 
@@ -50,10 +46,6 @@ export default async function HomePage({ params }: Params) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(lang)) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(lang)) }}
-      />
 
       <Header locale={lang} t={dict.header} common={dict.common} />
       <main>
@@ -67,7 +59,7 @@ export default async function HomePage({ params }: Params) {
           leadForm={dict.leadForm}
           chapters={chapters}
           featured={STOREFRONTS[lang].featured}
-          audioSrc={CHAPTER_1_AUDIO_SRC[lang]}
+          audioSrc={CHAPTER_1_AUDIO[lang].src}
         />
         <Friends dict={dict} />
         <Reviews dict={dict} />

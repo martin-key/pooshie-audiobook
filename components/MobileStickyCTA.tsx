@@ -51,7 +51,7 @@ export function MobileStickyCTA({ listenFree, getIt }: { listenFree: string; get
 
   return (
     <div
-      aria-hidden={!visible}
+      inert={!visible}
       style={{
         position: "fixed",
         left: 0,

@@ -405,7 +405,7 @@ export function Listen({ locale, t, common, regions, leadForm, chapters, feature
                 <audio
                   ref={audioRef}
                   src={audioSrc}
-                  preload="metadata"
+                  preload="none"
                   aria-label={format(t.audioAria, { n: ch.n, title: ch.title })}
                 />
               )}

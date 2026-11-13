@@ -221,10 +221,13 @@ export const STOREFRONTS: Record<Locale, Storefronts> = {
 };
 
 /**
- * Free chapter audio per site language. Only the English recording is on the site so far —
- * point `de` at Melina Camus's German chapter 1 once the file is here.
+ * Free chapter audio per site language: the file, the language it is recorded in, and the
+ * file's own length (mm:ss). The length can differ from the chapter's listed duration —
+ * the site's English file runs longer than the 6:48 in the chapter list.
+ * The Audiobook JSON-LD only announces the recording when its language matches the edition.
  */
-export const CHAPTER_1_AUDIO_SRC: Record<Locale, string> = {
-  en: "/audio/chapter-1.mp3",
-  de: "/audio/chapter-1.mp3",
+export const CHAPTER_1_AUDIO: Record<Locale, { src: string; inLanguage: string; duration: string }> = {
+  en: { src: "/audio/chapter-1.mp3", inLanguage: "en", duration: "8:16" },
+  // Melina Camus, „Der Anfang“ (MP3, 192 kbps).
+  de: { src: "/audio/chapter-1-de.mp3", inLanguage: "de", duration: "8:39" },
 };

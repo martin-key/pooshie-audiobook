@@ -2,6 +2,7 @@ import { Pill } from "./icons/Pill";
 import { Reveal } from "./Reveal";
 import { SoftCloud } from "./icons/SoftCloud";
 import { Rich } from "./Rich";
+import { Facts } from "./Facts";
 import { ISBN } from "@/lib/chapters";
 import { format, type Dictionary, type Locale } from "@/lib/i18n";
 import { STOREFRONTS, type ExternalLink } from "@/lib/links";
@@ -156,6 +157,10 @@ export function GetTheAudiobook({ locale, dict }: { locale: Locale; dict: Dictio
               {t.intro}
             </p>
           </div>
+        </Reveal>
+
+        <Reveal>
+          <Facts locale={locale} dict={dict} />
         </Reveal>
 
         <div className="get-grid">

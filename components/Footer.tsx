@@ -40,7 +40,7 @@ function ColumnHeading({ children }: { children: React.ReactNode }) {
         fontSize: 11,
         letterSpacing: "0.22em",
         textTransform: "uppercase",
-        color: "rgba(255,255,255,0.5)",
+        color: "rgba(255,255,255,0.62)",
         marginBottom: 10,
       }}
     >
@@ -64,11 +64,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
         fontFamily: "var(--font-ui)",
         fontSize: 13,
       }}
-      aria-labelledby="footer-heading"
     >
-      <h2 id="footer-heading" style={{ position: "absolute", left: -9999 }}>
-        {t.srHeading}
-      </h2>
       <div className="container">
         <div
           className="grid-2"
@@ -171,7 +167,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                   style={linkStyle}
                 >
                   {pl.name}
-                  <span style={{ color: "rgba(255,255,255,0.35)" }}> · {regions[pl.region]}</span>
+                  <span style={{ color: "rgba(255,255,255,0.6)" }}> · {regions[pl.region]}</span>
                 </a>
               ))}
             </div>
@@ -190,12 +186,12 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                   style={linkStyle}
                 >
                   {pl.name}
-                  <span style={{ color: "rgba(255,255,255,0.35)" }}> · {regions[pl.region]}</span>
+                  <span style={{ color: "rgba(255,255,255,0.6)" }}> · {regions[pl.region]}</span>
                 </a>
               ))}
               <a href={`${home}#get`} className="footer-link" style={linkStyle}>
                 {t.allStorefronts}
-                <span style={{ color: "rgba(255,255,255,0.35)" }}> · {t.everyCountry}</span>
+                <span style={{ color: "rgba(255,255,255,0.6)" }}> · {t.everyCountry}</span>
               </a>
             </div>
           </div>

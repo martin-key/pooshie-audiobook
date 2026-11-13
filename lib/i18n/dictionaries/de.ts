@@ -88,11 +88,11 @@ const faqs: Faq[] = [
   },
   {
     q: "Wo kann ich das Hörbuch hören?",
-    a: `„${TITLE}“ erscheint als Hörbuch bei Audible.de und in vielen weiteren Hör-Apps. Das E-Book mit den Aquarell-Illustrationen gibt es bei Amazon.de. Das erste Kapitel kannst du direkt auf dieser Seite gratis hören – ganz ohne Anmeldung.`,
+    a: `Das Hörbuch „${TITLE}“ ist bei Hörbuch-Shops wie Kobo, Chirp und Barnes & Noble gelistet, später kommt Audible.de dazu. Das E-Book mit den Aquarell-Illustrationen gibt es als Kindle-E-Book bei Amazon.de. Das erste Kapitel kannst du direkt auf dieser Seite gratis hören – ganz ohne Anmeldung.`,
   },
   {
-    q: "Ist das erste Kapitel wirklich gratis?",
-    a: "Ja. Drück auf dieser Seite bei Kapitel 1 – „Der Anfang“ – auf Play. Keine E-Mail, keine Anmeldung, keine Karte. Nur die Geschichte.",
+    q: "Ist das ganze Hörbuch gratis?",
+    a: "Nein, gratis ist nur Kapitel 1 – „Der Anfang“. Du hörst es direkt auf dieser Seite, ohne E-Mail, Anmeldung oder Karte. Das ganze Hörbuch mit allen 13 Kapiteln kaufst du bei den Hörbuch-Shops, die auf dieser Seite verlinkt sind.",
   },
   {
     q: "Worum geht es in dem Hörbuch?",
@@ -158,10 +158,10 @@ export const de: Dictionary = {
   },
 
   meta: {
-    siteTitle: "Puschi · Gute-Nacht-Geschichten für Kinder von 4 bis 8",
+    siteTitle: "Puschi, der rosa Igel · Gute-Nacht-Geschichten für Kinder von 4 bis 8",
     titleTemplate: "%s · Puschi",
     siteDescription: `${POSITIONING} Das Hörbuch „${TITLE}“ in 13 Kapiteln, gelesen von ${NARRATOR}.`,
-    homeTitle: "Puschi · Gute-Nacht-Geschichten als Hörbuch für Kinder (4–8)",
+    homeTitle: "Puschi, der rosa Igel · Gute-Nacht-Geschichten als Hörbuch (4–8)",
     homeDescription: `${POSITIONING} 13 Einschlafgeschichten als Hörbuch für Kinder, gelesen von ${NARRATOR}. Kapitel 1 gratis anhören.`,
     ogDescription: `${POSITIONING} Gelesen von ${NARRATOR}. Erstes Kapitel gratis.`,
     twitterDescription: `${POSITIONING} Erstes Kapitel gratis.`,
@@ -175,6 +175,7 @@ export const de: Dictionary = {
       "Kinderhörbuch",
       "Hörbuch 4-8 Jahre",
       "Puschi",
+      "Puschi rosa Igel",
       TITLE,
       "Geschichten über Freundschaft",
       "Melina Camus",
@@ -190,7 +191,6 @@ export const de: Dictionary = {
     genres: ["Kinderliteratur", "Gute-Nacht-Geschichten", "Tierfabeln"],
     keywords:
       "Gute-Nacht-Geschichten, Einschlafgeschichten, Hörbuch für Kinder, Kinderhörbuch, Igel, 4-8 Jahre, Freundschaft, Mitgefühl, Mut",
-    breadcrumbHome: "Startseite",
   },
 
   header: {
@@ -211,8 +211,8 @@ export const de: Dictionary = {
     titleHighlight: "rosa Igel,",
     titleUnderline: "dessen Stacheln",
     titleEnd: "nicht pieksen.",
-    introTitle: TITLE,
-    introRest: `: ${POSITIONING} Warm gelesen von ${NARRATOR}. Das erste Kapitel hörst du gratis.`,
+    titleSub: `${TITLE} – 13 Gute-Nacht-Geschichten als Hörbuch für Kinder von 4 bis 8, gelesen von ${NARRATOR}.`,
+    intro: `${POSITIONING} Kapitel 1 hörst du hier gratis, ohne Anmeldung – das ganze Hörbuch gibt es bei den Hörbuch-Shops.`,
     stats: [
       { n: "13", label: "Gute-Nacht-Kapitel" },
       { n: "84 Min.", label: "Spieldauer" },
@@ -272,7 +272,7 @@ export const de: Dictionary = {
 
   get: {
     pill: "Heute Abend anfangen",
-    heading: "Wo du *puschi* findest",
+    heading: "Wo kann ich *Puschi* hören?",
     intro: `Alle dreizehn Gute-Nacht-Geschichten – ${RUNTIME} zum Einschlafen – als Hörbuch für Kinder und als illustriertes E-Book.`,
     audiobookEyebrow: "Das Hörbuch · auf Deutsch",
     audiobookTitle: TITLE,
@@ -284,13 +284,35 @@ export const de: Dictionary = {
     otherEyebrow: "Andere Sprachen",
     otherTitle: "Auf Englisch & Bulgarisch",
     otherNote: "Das Original „The Tales of Pooshie and Kitty“ und die bulgarische Ausgabe „Разкази за Пуши и Кити“.",
-    comingSoon: "Das Hörbuch erscheint in Kürze bei Audible.de und in vielen weiteren Hör-Apps.",
+    comingSoon: "Das Hörbuch ist bei Kobo, Chirp und Barnes & Noble gelistet und kommt bald zu Audible.de.",
     primaryCta: "Bei {name} anhören",
     tileAria: "{name} – {region} (öffnet in neuem Tab)",
     bottomLine: `Gelesen von ${NARRATOR} · eine echte Stimme, nie KI · für Kinder von 4 bis 8`,
   },
 
   platforms: { regions },
+
+  facts: {
+    heading: "Fakten auf einen Blick",
+    title: "Titel",
+    titleValue: TITLE,
+    author: "Autor",
+    narrator: "Sprecherin",
+    narratorValue: `${NARRATOR} (echte Stimme, keine KI)`,
+    chapters: "Kapitel",
+    chaptersValue: "13 Kapitel à 5–8 Minuten",
+    runtime: "Spieldauer",
+    runtimeValue: `${RUNTIME} (1 Stunde und 24 Minuten)`,
+    age: "Alter",
+    ageValue: "4 bis 8 Jahre",
+    isbn: "ISBN",
+    released: "Erscheinungsdatum",
+    free: "Gratis",
+    freeValue: "Nur Kapitel 1 – hier auf der Seite, ohne Anmeldung. Das ganze Hörbuch ist nicht gratis.",
+    audiobook: "Hörbuch",
+    ebook: "E-Book",
+    ebookValue: "Kindle bei Amazon.de",
+  },
 
   faq: {
     pill: "Fragen, sanft beantwortet",
@@ -306,7 +328,6 @@ export const de: Dictionary = {
   },
 
   footer: {
-    srHeading: "Fußzeile",
     tagline: `${POSITIONING} Mit Puschi, einem kleinen rosa Igel, dessen Stacheln nicht pieksen.`,
     socialAria: "Puschi auf {name} (öffnet in neuem Tab)",
     newsletterHeading: "Ab und zu ein Gute-Nacht-Brief",
@@ -318,7 +339,7 @@ export const de: Dictionary = {
     navAria: "Fußzeile",
     contact: "Kontakt",
     privacy: "Datenschutz",
-    copyright: "© {year} Puschi & Kitty · audiobook.pooshie.net",
+    copyright: "© {year} Puschi & Kitty · pooshieaudiobook.com",
   },
 
   leadForm: {
